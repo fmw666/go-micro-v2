@@ -18,6 +18,6 @@ https://github.com/protocolbuffers/protobuf/releases
 
 
 ```s
-protoc --proto_path=. --micro_out=. --go_out=. userModel.proto
-protoc --proto_path=. --micro_out=. --go_out=. userService.proto
+protoc --proto_path=. --micro_out=../ --go_out=../ userModel.proto
+protoc --proto_path=. --micro_out=../ --go_out=../ userService.proto
 ```
