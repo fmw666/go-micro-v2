@@ -1,6 +1,7 @@
 package weblib
 
 import (
+	"api-gateway/docs"
 	"api-gateway/weblib/handlers"
 	"api-gateway/weblib/middleware"
 
@@ -8,10 +9,26 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+func initSwagger() {
+	docs.SwaggerInfo.Title = "API Gateway"
+	docs.SwaggerInfo.Description = "网关 api 总路由"
+	docs.SwaggerInfo.Version = "1.0"
+	// docs.SwaggerInfo.Host = config.ServerSetting.PrefixUrl
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	// docs.SwaggerInfo.Schemes = []string{"http", "https"}
+}
 
 func NewRouter(service ...interface{}) *gin.Engine {
 	ginRouter := gin.Default()
+
+	// Swagger 配置
+	go initSwagger()
+	ginRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
 	ginRouter.Use(middleware.Cors(), middleware.InitMiddleware(service), middleware.ErrorMiddleware())
 	store := cookie.NewStore([]byte("something-very-secret"))
 	ginRouter.Use(sessions.Sessions("mysession", store))

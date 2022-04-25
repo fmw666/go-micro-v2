@@ -22,7 +22,7 @@ func main() {
 		micro.WrapClient(wrappers.NewUserWrapper),
 	)
 	// 用户服务调用实例
-	userService := service.NewUserService("rpcUserService", userMicroService.Client())
+	userService := service.NewUserService("userService", userMicroService.Client())
 
 	// 创建微服务实例，使用 gin 暴露 http 接口并注册到 consul
 	microService := web.NewService(

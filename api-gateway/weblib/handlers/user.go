@@ -13,7 +13,7 @@ import (
 func UserRegister(ginCtx *gin.Context) {
 	var userReq service.UserRequest
 	PanicIfUserError(ginCtx.Bind(&userReq))
-	// 从gin.Key中取出服务实例
+	// 从 gin.Key 中取出服务实例
 	userService := ginCtx.Keys["userService"].(service.UserService)
 	userResp, err := userService.UserRegister(context.Background(), &userReq)
 	PanicIfUserError(err)
@@ -24,7 +24,7 @@ func UserRegister(ginCtx *gin.Context) {
 func UserLogin(ginCtx *gin.Context) {
 	var userReq service.UserRequest
 	PanicIfUserError(ginCtx.Bind(&userReq))
-	// 从gin.Key中取出服务实例
+	// 从 gin.Key 中取出服务实例
 	userService := ginCtx.Keys["userService"].(service.UserService)
 	userResp, err := userService.UserLogin(context.Background(), &userReq)
 	PanicIfUserError(err)

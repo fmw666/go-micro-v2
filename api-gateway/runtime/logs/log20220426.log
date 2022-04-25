@@ -1,0 +1,1 @@
+[INFO][pkg.go:12]2022/04/26 00:00:47 userService--fallback failed with '{"id":"go.micro.client","code":500,"detail":"connection closed","status":"Internal Server Error"}'. run error was '{"id":"go.micro.client","code":500,"detail":"connection closed","status":"Internal Server Error"}'

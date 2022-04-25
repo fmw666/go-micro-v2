@@ -22,7 +22,7 @@ func main() {
 	)
 	// 获取一个微服务的实例
 	microService := web.NewService(
-		web.Name("rpcUserService"),
+		web.Name("userService"),
 		// web.RegisterTTL(30 * time.Second), // 设置注册服务的过期时间
 		// web.RegisterInterval(20 * time.Second), // 设置间隔多久再次注册服务
 		web.Address("127.0.0.1:8081"),
