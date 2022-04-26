@@ -21,3 +21,24 @@ https://github.com/protocolbuffers/protobuf/releases
 protoc --proto_path=. --micro_out=../ --go_out=../ userModel.proto
 protoc --proto_path=. --micro_out=../ --go_out=../ userService.proto
 ```
+
+### 服务运行
+
++ 启用 服务发现：
+
+    ```sh
+    $ consul agent -dev -node fmw
+    ```
+
++ 启动 微服务模块
+
+    ```sh
+    user$ go run main.go
+    order$ go run main.go
+    ```
+
++ 启动 API网关模块
+
+    ```sh
+    api-gateway$ go run main.go
+    ```

@@ -2,6 +2,7 @@ package wrappers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/afex/hystrix-go/hystrix"
 	"github.com/aiscrm/go-micro/v2/client"
@@ -13,6 +14,7 @@ type userWrapper struct {
 
 func (wrapper *userWrapper) Call(ctx context.Context, req client.Request, resp interface{}, opts ...client.CallOption) error {
 	cmdName := req.Service() + "." + req.Endpoint()
+	fmt.Println(cmdName)
 	config := hystrix.CommandConfig{
 		Timeout:                30000,
 		RequestVolumeThreshold: 20,   // 熔断器请求阈值，默认20，意思是有20个请求才能进行错误百分比计算
