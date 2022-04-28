@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+	_ "order/models"
 	"order/router"
 	"os/exec"
 	"time"
