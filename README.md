@@ -1,3 +1,7 @@
+```s
+docker-compose up -d
+```
+
 ```go
 go get github.com/micro/go-micro/v2
 
