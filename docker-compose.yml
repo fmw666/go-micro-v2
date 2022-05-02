@@ -19,18 +19,6 @@ services:
       - backend
     restart: always                      # 指定容器退出后的重启策略为始终重启
 
-  consul:                                # 自定义容器名称
-    image: consul:1.12
-    environment:
-      - TZ=${TZ}
-      - ALLOW_NONE_AUTHENTICATION=yes
-      - CONSUL_ADVERTISE_CLIENT_URLS=http://consul:8500
-    ports:                               # 设置端口映射
-      - "${CONSUL_PORT}:8500"
-    networks:
-      - backend
-    restart: always
-
   mysql:
     image: mysql:5.7
     environment:

@@ -17,12 +17,6 @@ RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.lis
     vim \
     screen
 
-# 安装 protoc
-USER root
-RUN curl -L -o /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip && \
-    unzip -d /tmp/protoc /tmp/protoc.zip && \
-    mv /tmp/protoc/bin/protoc $GOPATH/bin
-
 # $GOPATH/bin 添加到环境变量中
 ENV PATH $GOPATH/bin:$PATH
 
