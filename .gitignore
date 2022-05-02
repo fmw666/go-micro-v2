@@ -1,1 +1,27 @@
-logs/*
+# editor
+.vscode/
+.idea/
+
+# vagrant
+.vagrant/
+
+# os
+.DS_Store
+.thumbs.db
+
+# virtalenv
+venv/
+env/
+ENV/
+
+# log file
+*.log
+
+# tmp file
+tmp*
+
+# go
+go.sum
+
+# docker
+data/*

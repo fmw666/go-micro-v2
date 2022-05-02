@@ -7,11 +7,11 @@ import (
 	"github.com/aiscrm/go-micro/v2/client"
 )
 
-type userWrapper struct {
+type orderWrapper struct {
 	client.Client
 }
 
-func (wrapper *userWrapper) Call(ctx context.Context, req client.Request, resp interface{}, opts ...client.CallOption) error {
+func (wrapper *orderWrapper) Call(ctx context.Context, req client.Request, resp interface{}, opts ...client.CallOption) error {
 	cmdName := req.Service() + "." + req.Endpoint()
 	config := hystrix.CommandConfig{
 		Timeout:                30000,
@@ -27,7 +27,7 @@ func (wrapper *userWrapper) Call(ctx context.Context, req client.Request, resp i
 	})
 }
 
-// NewUserWrapper 初始化 Wrapper
-func NewUserWrapper(c client.Client) client.Client {
-	return &userWrapper{c}
+// NewOrderWrapper 初始化 Wrapper
+func NewOrderWrapper(c client.Client) client.Client {
+	return &orderWrapper{c}
 }

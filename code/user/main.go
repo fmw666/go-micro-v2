@@ -16,12 +16,12 @@ func main() {
 
 	// consul 注册件
 	consulReg := consul.NewRegistry(
-		registry.Addrs("127.0.0.1:8500"),
+		registry.Addrs("172.27.128.1:8500"),
 	)
 	// 获取一个微服务的实例
 	microService := micro.NewService(
 		micro.Name("rpcUserService"),
-		micro.Address("127.0.0.1:8081"),
+		micro.Address("0.0.0.0:8081"),
 		micro.Registry(consulReg),
 	)
 	// 服务注册

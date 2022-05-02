@@ -9,17 +9,25 @@ go get github.com/micro/go-micro/v2
 go get github.com/golang/protobuf
 ```
 
++ protoc 下载
+
+https://github.com/protocolbuffers/protobuf/releases
+
+
++ protoc-gen-micro 下载
+
 ```sh
-git clone https://github.com/zserge/protoc-gen-micro
+git clone https://github.com/gurufocus/protoc-gen-micro.git
 cd protoc-gen-micro
 go build
 # protoc-gen-micro.exe
 ```
 
-+ protoc 下载
++ protoc-gen-go 下载
 
-https://github.com/protocolbuffers/protobuf/releases
-
+```sh
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+```
 
 ```s
 protoc --proto_path=. --micro_out=../ --go_out=../ userModel.proto

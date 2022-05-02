@@ -1,0 +1,19 @@
+syntax="proto3";
+package service;
+import "orderModel.proto";
+option go_package ="./;service";
+
+message OrderRequest{
+  // @inject_tag: json:"id" form:"id" uri:"id"
+  string ID=1;
+}
+
+message OrderDetailResponse{
+  OrderModel OrderDetail=1;
+  uint32 Code=2;
+}
+
+service OrderService{
+  // rpc GetOrderList() returns(UserDetailResponse);
+  rpc GetOrderDetail(OrderRequest) returns(OrderDetailResponse);
+}

@@ -17,6 +17,11 @@ func initSwagger() {
 	docs.SwaggerInfo.Title = "API Gateway"
 	docs.SwaggerInfo.Description = "网关 api 总路由"
 	docs.SwaggerInfo.Version = "1.0"
+	// docs.SwaggerInfo.SecurityDefinitions.ApiKeyAuth = &docs.ApiKeyAuth{
+	// 	In:   "header",
+	// 	Name: "Authorization",
+	// 	Type: "apiKey",
+	// }
 	// docs.SwaggerInfo.Host = config.ServerSetting.PrefixUrl
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	// docs.SwaggerInfo.Schemes = []string{"http", "https"}
@@ -47,7 +52,8 @@ func NewRouter(service ...interface{}) *gin.Engine {
 		{
 			apiOrder := apiAuthed.Group("/orders")
 			{
-				apiOrder.GET("/", handlers.GetOrderList)
+				apiOrder.GET("", handlers.GetOrderList)
+				apiOrder.GET(":id", handlers.GetOrderDetail)
 			}
 		}
 	}

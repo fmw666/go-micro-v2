@@ -11,6 +11,7 @@ import (
 
 func BuildUser(item models.User) *service.UserModel {
 	userModel := service.UserModel{
+		ID:        uint32(item.ID.ID),
 		Username:  item.Username,
 		CreatedAt: item.CreatedAt.Unix(),
 		UpdatedAt: item.UpdatedAt.Unix(),
