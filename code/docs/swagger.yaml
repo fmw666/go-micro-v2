@@ -1,0 +1,65 @@
+definitions:
+  schema.Login:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  schema.Register:
+    properties:
+      password:
+        type: string
+      password_confirm:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: 微服务模块 User 中提供的用户登录服务
+      parameters:
+      - description: 登录
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 用户登录
+      tags:
+      - User 服务
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: 微服务模块 User 中提供的用户注册服务
+      parameters:
+      - description: 注册
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.Register'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 用户注册
+      tags:
+      - User 服务
+swagger: "2.0"
