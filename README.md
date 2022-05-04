@@ -7,18 +7,19 @@
       <img src="https://shields.io/badge/-%20v1.18-007D9C?logo=go&logoColor=white&style=flat&logoWidth=16" alt="language"/>
     </a>
     <a href="#">
-      <img src="https://badgen.net/github/branches/fmw666/microservice-code-sample" alt="branches"/>
+      <img src="https://badgen.net/github/branches/fmw666/microservice-code-sample?color=007D9C" alt="branches"/>
     </a>
     <a href="https://github.com/fmw666/microservice-code-sample/blob/master/LICENSE">
-      <img src="https://badgen.net/github/license/fmw666/microservice-code-sample" alt="license"/>
+      <img src="https://img.shields.io/github/license/fmw666/microservice-code-sample?color=007D9C" alt="license"/>
     </a>
   </p>
 
   <strong>基于：<a href="https://bytecodealliance.org/">《一篇文章让你了解微服务架构设计》</a></strong>
 
   </div>
-
 </div>
+
+<br>
 
 ## 🚀 项目介绍
 
