@@ -38,15 +38,15 @@
 
 + **[User 服务](#no-reply)**
 
-    + 微服务应用端口：8081
+    + 微服务应用端口：`8081`
 
-    + 微服务应用名称：userRpcService
+    + 微服务应用名称：`userRpcService`
 
         <li>
         <details>
-        <p dir="auto"><summary>模型：User</summary></p>
+        <p dir="auto"><summary>模型：<code>User</code></summary></p>
         <blockquote>
-        <p dir="auto">表名：user</p>
+        <p dir="auto">表名：<code>user</code></p>
         </blockquote>
         <table>
         <thead>
@@ -141,30 +141,92 @@
 
 + **[Order 服务](#no-reply)**
 
-    + 微服务应用端口：8082
+    + 微服务应用端口：`8082`
 
-    + 微服务应用名称：orderRpcService
+    + 微服务应用名称：`orderRpcService`
 
-    + 模型：Order
+        <li>
+        <details>
+        <p dir="auto"><summary>模型：<code>Order</code></summary></p>
+        <blockquote>
+        <p dir="auto">表名：<code>order</code></p>
+        </blockquote>
+        <table>
+        <thead>
+        <tr>
+        <th>字段</th>
+        <th>类型</th>
+        <th>备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>id</td>
+        <td>int</td>
+        <td>主键</td>
+        </tr>
+        <tr>
+        <td>created_at</td>
+        <td>datetime</td>
+        <td>创建时间</td>
+        </tr>
+        <tr>
+        <td>updated_at</td>
+        <td>datetime</td>
+        <td>更新时间</td>
+        </tr>
+        <tr>
+        <td>deleted_at</td>
+        <td>datetime</td>
+        <td>删除时间</td>
+        </tr>
+        <tr>
+        <td>name</td>
+        <td>string</td>
+        <td>订单名称</td>
+        </tr>
+        <tr>
+        <td>user_id</td>
+        <td>int</td>
+        <td>用户id</td>
+        </tr>
+        </tbody>
+        </table>
+        </details>
+        </li>
 
-        > 表名：order
-
-        | 字段 | 类型 | 备注 |
-        | ---- | ---- | ---- |
-        | id | int | 主键 |
-        | created_at | datetime | 创建时间 |
-        | updated_at | datetime | 更新时间 |
-        | deleted_at | datetime | 删除时间 |
-        | name | string | 订单名称 |
-        | user_id | int | 用户id |
-
-
-    + 接口（需要 JWT 认证）
-
-        | 接口名 | 请求方式 | 请求路径 | 请求参数 | 返回值 |
-        | ---- | ---- | ---- | ---- | ---- |
-        | 创建订单 | POST | /orders | name, user_id | 创建成功，返回订单信息 |
-        | 获取订单列表 | GET | /orders | user_id | 获取成功，返回订单列表 |
+        <li>
+        <details>
+        <p dir="auto"><summary>接口（需要 JWT 认证）</summary></p>
+        <table>
+        <thead>
+        <tr>
+        <th>接口名</th>
+        <th>请求方式</th>
+        <th>请求路径</th>
+        <th>请求参数</th>
+        <th>返回值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>创建订单</td>
+        <td>POST</td>
+        <td>/orders</td>
+        <td>name, user_id</td>
+        <td>创建成功，返回订单信息</td>
+        </tr>
+        <tr>
+        <td>获取订单列表</td>
+        <td>GET</td>
+        <td>/orders</td>
+        <td>user_id</td>
+        <td>获取成功，返回订单列表</td>
+        </tr>
+        </tbody>
+        </table>
+        </details>
+        </li>
 
 ## 🎈 分支说明
 
