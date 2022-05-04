@@ -1,48 +1,77 @@
-```s
-docker-compose up -d
-```
+## 微服务应用代码示例
 
-```go
-go get github.com/micro/go-micro/v2
+### 🚀 项目介绍
 
-// 需要到下载位置进行 `go build` 获取可执行文件
-go get github.com/golang/protobuf
-```
++ 基础介绍
 
-```sh
-git clone https://github.com/zserge/protoc-gen-micro
-cd protoc-gen-micro
-go build
-# protoc-gen-micro.exe
-```
+    | 项目地址 | URL 前缀 | 数据库 |
+    | -------- | -------- | -------- |
+    | 见具体分支 | /api/v1 | MySQL<br>库名：mall<br>表名：user, order |
 
-+ protoc 下载
++ 项目技术
 
-https://github.com/protocolbuffers/protobuf/releases
+    | 编程语言 | web 框架 | ORM | 认证 | 日志 | 微服务框架 |
+    | ------- | ---- | ---- | ---- | ---- | ---- |
+    | Go 1.18 | gin | gorm | JWT | logrus | go-micro v2 |
+
++ User 服务
+
+    + 端口：8081
+
+    + 模型：User
+
+        > 表名：user
+
+        | 字段 | 类型 | 备注 |
+        | ---- | ---- | ---- |
+        | id | int | 主键 |
+        | created_at | datetime | 创建时间 |
+        | updated_at | datetime | 更新时间 |
+        | deleted_at | datetime | 删除时间 |
+        | username | string | 用户名 |
+        | password | string | 密码 |
+
+    + 接口
+
+        | 接口名 | 请求方式 | 请求路径 | 请求参数 | 返回值 |
+        | ---- | ---- | ---- | ---- | ---- |
+        | 注册 | POST | /user/register | username, password | 注册成功，返回用户信息 |
+        | 登录 | POST | /user/login | username, password | 登录成功，返回用户信息 |
+        | 创建订单 | POST | /users/{:user_id}/orders | user_id, order_id | 创建成功，返回订单信息 |
+        | 查询订单 | GET | /users/{:user_id}/orders | user_id, order_id | 查询成功，返回订单信息 |
+
++ Order 服务
+
+    + 端口：8082
+
+    + 模型：Order
+
+        > 表名：order
+
+        | 字段 | 类型 | 备注 |
+        | ---- | ---- | ---- |
+        | id | int | 主键 |
+        | created_at | datetime | 创建时间 |
+        | updated_at | datetime | 更新时间 |
+        | deleted_at | datetime | 删除时间 |
+        | name | string | 订单名称 |
+        | user_id | int | 用户id |
 
 
-```s
-protoc --proto_path=. --micro_out=../ --go_out=../ userModel.proto
-protoc --proto_path=. --micro_out=../ --go_out=../ userService.proto
-```
+    + 接口（需要 JWT 认证）
 
-### 服务运行
+        | 接口名 | 请求方式 | 请求路径 | 请求参数 | 返回值 |
+        | ---- | ---- | ---- | ---- | ---- |
+        | 创建订单 | POST | /orders | name, user_id | 创建成功，返回订单信息 |
+        | 获取订单列表 | GET | /orders | user_id | 获取成功，返回订单列表 |
 
-+ 启用 服务发现：
+### 🎈 分支说明
 
-    ```sh
-    $ consul agent -dev -node fmw
-    ```
+> swagger-ui 应用在 API 入口
 
-+ 启动 微服务模块
-
-    ```sh
-    user$ go run main.go
-    order$ go run main.go
-    ```
-
-+ 启动 API网关模块
-
-    ```sh
-    api-gateway$ go run main.go
-    ```
+| 分支名称 | 应用端口 | API 入口 | 分支描述 |
+| ------- | -------- | ------- | ------- |
+| master | - | - | 描述文档 |
+| monolithic-app | 8080 | 8080 | 单体应用代码 |
+| microservice-app | User 服务：8081<br>Order 服务：8082 | 8081, 8082 | 微服务应用代码 |
+| microservice-app-with-gateway | API 网关服务：8080<br>User 服务：8081<br>Order 服务：8082 | 8080 | 微服务应用代码，同时支持网关 |
