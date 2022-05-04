@@ -4,8 +4,7 @@
   <div align="right">
   <p>
     <a href="https://golang.google.cn/">
-      <img src="https://img.shields.io/badge/-%20
-      1.18-007D9C?logo=go&logoColor=white&style=flat&logoWidth=16" alt="language"/>
+      <img src="https://shields.io/badge/-%20v1.18-007D9C?logo=go&logoColor=white&style=flat&logoWidth=16" alt="language"/>
     </a>
     <a href="#">
       <img src="https://badgen.net/github/branches/fmw666/microservice-code-sample" alt="branches"/>
@@ -16,12 +15,6 @@
   </p>
 
   <strong>基于：<a href="https://bytecodealliance.org/">《一篇文章让你了解微服务架构设计》</a></strong>
-
-  <p>
-    <strong>目录导航：
-    <li><a href="#-项目介绍">🚀 项目介绍</a></li>
-    <li><a href="#-分支说明">🎈 分支说明</a></li>
-  </p>
 
   </div>
 
