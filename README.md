@@ -36,16 +36,15 @@
     | ------- | ---- | ---- | ---- | ---- | ---- | ---- |
     | Go 1.18 | gin | MySQL | gorm | JWT | logrus | go-micro v2 |
 
-+ User 服务
++ **[User 服务](#no-reply)**
 
     + 微服务应用端口：8081
 
     + 微服务应用名称：userRpcService
 
-
         <li>
         <details>
-        <summary>模型：User</summary>
+        <p dir="auto"><summary>模型：User</summary></p>
         <blockquote>
         <p dir="auto">表名：user</p>
         </blockquote>
@@ -93,18 +92,58 @@
         </details>
         </li>
 
-    + 接口
+        <li>
+        <details>
+        <p dir="auto"><summary>接口</summary></p>
+        <table>
+        <thead>
+        <tr>
+        <th>接口名</th>
+        <th>请求方式</th>
+        <th>请求路径</th>
+        <th>请求参数</th>
+        <th>返回值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>注册</td>
+        <td>POST</td>
+        <td>/user/register</td>
+        <td>username, password</td>
+        <td>注册成功，返回用户信息</td>
+        </tr>
+        <tr>
+        <td>登录</td>
+        <td>POST</td>
+        <td>/user/login</td>
+        <td>username, password</td>
+        <td>登录成功，返回用户信息</td>
+        </tr>
+        <tr>
+        <td>创建订单</td>
+        <td>POST</td>
+        <td>/users/{:user_id}/orders</td>
+        <td>user_id, order_id</td>
+        <td>创建成功，返回订单信息</td>
+        </tr>
+        <tr>
+        <td>查询订单</td>
+        <td>GET</td>
+        <td>/users/{:user_id}/orders</td>
+        <td>user_id, order_id</td>
+        <td>查询成功，返回订单信息</td>
+        </tr>
+        </tbody>
+        </table>
+        </details>
+        </li>
 
-        | 接口名 | 请求方式 | 请求路径 | 请求参数 | 返回值 |
-        | ---- | ---- | ---- | ---- | ---- |
-        | 注册 | POST | /user/register | username, password | 注册成功，返回用户信息 |
-        | 登录 | POST | /user/login | username, password | 登录成功，返回用户信息 |
-        | 创建订单 | POST | /users/{:user_id}/orders | user_id, order_id | 创建成功，返回订单信息 |
-        | 查询订单 | GET | /users/{:user_id}/orders | user_id, order_id | 查询成功，返回订单信息 |
-
-+ Order 服务
++ **[Order 服务](#no-reply)**
 
     + 微服务应用端口：8082
+
+    + 微服务应用名称：orderRpcService
 
     + 模型：Order
 
