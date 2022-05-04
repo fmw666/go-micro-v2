@@ -1,26 +1,29 @@
 <div align="center">
-  <h1><code>微服务应用代码示例</code></h1>
+  <h1>💬 微服务应用代码示例</h1>
 
+  <div align="right">
   <p>
-    <strong>目录导航：
-    <a href="#-项目介绍">🚀 项目介绍</a></strong>
-    <span>&ensp;|&ensp;</span>
-    <a href="#-分支说明">🎈 分支说明</a></strong>
+    <a href="https://golang.google.cn/">
+      <img src="https://img.shields.io/badge/-%20
+      1.18-007D9C?logo=go&logoColor=white&style=flat&logoWidth=16" alt="language"/>
+    </a>
+    <a href="#">
+      <img src="https://badgen.net/github/branches/fmw666/microservice-code-sample" alt="branches"/>
+    </a>
+    <a href="https://github.com/fmw666/microservice-code-sample/blob/master/LICENSE">
+      <img src="https://badgen.net/github/license/fmw666/microservice-code-sample" alt="license"/>
+    </a>
   </p>
 
   <strong>基于：<a href="https://bytecodealliance.org/">《一篇文章让你了解微服务架构设计》</a></strong>
 
   <p>
-    <a href="https://github.com/bytecodealliance/wasmtime-go/actions?query=workflow%3ACI">
-      <img src="https://github.com/bytecodealliance/wasmtime-go/workflows/CI/badge.svg" alt="CI status"/>
-    </a>
-    <a href="https://pkg.go.dev/github.com/bytecodealliance/wasmtime-go">
-      <img src="https://godoc.org/github.com/bytecodealliance/wasmtime-go?status.svg" alt="Documentation"/>
-    </a>
-    <a href="https://bytecodealliance.github.io/wasmtime-go/coverage.html">
-      <img src="https://img.shields.io/badge/coverage-main-green" alt="Code Coverage"/>
-    </a>
+    <strong>目录导航：
+    <li><a href="#-项目介绍">🚀 项目介绍</a></li>
+    <li><a href="#-分支说明">🎈 分支说明</a></li>
   </p>
+
+  </div>
 
 </div>
 
@@ -228,13 +231,15 @@
         </details>
         </li>
 
+<br>
+
 ## 🎈 分支说明
 
 > swagger-ui 应用在 API 入口
 
 | 分支名称 | 应用端口 | API 入口 | 分支描述 |
-| ------- | -------- | ------- | ------- |
-| master | - | - | 描述文档 |
-| monolithic-app | 8080 | 8080 | 单体应用代码 |
-| microservice-app | User 服务：8081<br>Order 服务：8082 | 8081, 8082 | 微服务应用代码 |
-| microservice-app-with-gateway | API 网关服务：8080<br>User 服务：8081<br>Order 服务：8082 | 8080 | 微服务应用代码，同时支持网关 |
+| :------ | :------- | :------ | :------ |
+| [master](https://github.com/fmw666/microservice-example/tree/master) | - | - | 描述文档 |
+| [monolithic-app](https://github.com/fmw666/microservice-example/tree/monolithic-app) | 8080 | 8080 | 单体应用代码 |
+| [microservice-app](https://github.com/fmw666/microservice-example/tree/microservice-app) | User 服务：8081<br>Order 服务：8082 | 8081, 8082 | 微服务应用代码 |
+| [microservice-app-with-gateway](https://github.com/fmw666/microservice-example/tree/microservice-app-with-gateway) | API 网关服务：8080<br>User 服务：8081<br>Order 服务：8082 | 8080 | 微服务应用代码<br>使用网关作为入口 |
