@@ -19,7 +19,7 @@ func BuildUser(user models.User) *schema.UserResp {
 
 // UserRegister 用户注册
 // @Summary 用户注册
-// @Description 微服务模块 User 中提供的用户注册服务
+// @Description User 服务中提供的用户注册服务
 // @Tags User 服务
 // @Accept  json
 // @Produce  json
@@ -68,7 +68,7 @@ func UserRegister(ginCtx *gin.Context) {
 
 // UserLogin 用户登录
 // @Summary 用户登录
-// @Description 微服务模块 User 中提供的用户登录服务
+// @Description User 服务中提供的用户登录服务
 // @Tags User 服务
 // @Accept  json
 // @Produce  json
@@ -95,6 +95,9 @@ func UserLogin(ginCtx *gin.Context) {
 	}
 	// 获取 token
 	token, _ := utils.GenerateToken(uint(user.Id))
+	// 存入 session
+	utils.SetCurrentUser(ginCtx, &user)
+
 	ginCtx.JSON(200, gin.H{
 		"code": 200,
 		"msg":  "ok",

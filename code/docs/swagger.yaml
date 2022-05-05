@@ -7,6 +7,11 @@ definitions:
       username:
         type: string
     type: object
+  schema.OrderCreateReq:
+    properties:
+      name:
+        type: string
+    type: object
   schema.RegisterReq:
     properties:
       password:
@@ -27,12 +32,12 @@ paths:
     get:
       consumes:
       - application/json
-      description: 微服务模块 Order 中提供的获取订单列表服务
+      description: Order 服务中提供的获取订单列表服务
       parameters:
       - description: 用户ID
         in: query
         name: user_id
-        type: string
+        type: integer
       - description: 偏移量
         in: query
         name: offset
@@ -54,11 +59,35 @@ paths:
       summary: 获取订单列表
       tags:
       - Order 服务
+    post:
+      consumes:
+      - application/json
+      description: Order 服务中提供的创建订单服务
+      parameters:
+      - description: 订单
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/schema.OrderCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - BasicAuth: []
+      summary: 创建订单
+      tags:
+      - Order 服务
   /user/login:
     post:
       consumes:
       - application/json
-      description: 微服务模块 User 中提供的用户登录服务
+      description: User 服务中提供的用户登录服务
       parameters:
       - description: 登录
         in: body
@@ -80,7 +109,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: 微服务模块 User 中提供的用户注册服务
+      description: User 服务中提供的用户注册服务
       parameters:
       - description: 注册
         in: body

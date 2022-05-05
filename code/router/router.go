@@ -21,8 +21,10 @@ func Router() *gin.Engine {
 
 	// 中间件
 	ginRouter.Use(middleware.Cors(), middleware.ErrorMiddleware())
+
+	// 设置 sessionId 的密钥
 	store := cookie.NewStore([]byte("something-very-secret"))
-	ginRouter.Use(sessions.Sessions("mysession", store))
+	ginRouter.Use(sessions.Sessions("SESSIONID", store))
 
 	// 路由规则
 	apiv1 := ginRouter.Group("/api/v1")
@@ -41,6 +43,7 @@ func Router() *gin.Engine {
 			apiOrder := apiAuthed.Group("/orders")
 			{
 				apiOrder.GET("", service.GetOrderList)
+				apiOrder.POST("", service.CreateOrder)
 			}
 		}
 	}

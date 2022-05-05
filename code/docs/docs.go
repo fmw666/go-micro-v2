@@ -26,7 +26,7 @@ const docTemplate = `{
                         "BasicAuth": []
                     }
                 ],
-                "description": "微服务模块 Order 中提供的获取订单列表服务",
+                "description": "Order 服务中提供的获取订单列表服务",
                 "consumes": [
                     "application/json"
                 ],
@@ -39,7 +39,7 @@ const docTemplate = `{
                 "summary": "获取订单列表",
                 "parameters": [
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "用户ID",
                         "name": "user_id",
                         "in": "query"
@@ -65,11 +65,51 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Order 服务中提供的创建订单服务",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order 服务"
+                ],
+                "summary": "创建订单",
+                "parameters": [
+                    {
+                        "description": "订单",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.OrderCreateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         },
         "/user/login": {
             "post": {
-                "description": "微服务模块 User 中提供的用户登录服务",
+                "description": "User 服务中提供的用户登录服务",
                 "consumes": [
                     "application/json"
                 ],
@@ -103,7 +143,7 @@ const docTemplate = `{
         },
         "/user/register": {
             "post": {
-                "description": "微服务模块 User 中提供的用户注册服务",
+                "description": "User 服务中提供的用户注册服务",
                 "consumes": [
                     "application/json"
                 ],
@@ -144,6 +184,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "schema.OrderCreateReq": {
+            "type": "object",
+            "properties": {
+                "name": {
                     "type": "string"
                 }
             }
