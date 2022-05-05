@@ -3,7 +3,7 @@ package models
 import (
 	"log"
 
-	"order/config"
+	"app/config"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -17,4 +17,11 @@ func Init() *gorm.DB {
 		log.Println("gorm Init Error : ", err)
 	}
 	return db
+}
+
+func Migrate() {
+	err := DB.Set(`gorm:table_options`, "charset=utf8mb4").AutoMigrate(&User{}, &Order{})
+	if err != nil {
+		log.Println("gorm Init Error : ", err)
+	}
 }

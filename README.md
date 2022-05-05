@@ -1,6 +1,20 @@
+## 单体应用代码示例
+
+### Docker 部署
+
 ```s
 docker-compose up -d
 ```
+
+### Docker 中运行
+
+初始化数据库、swag、mod
+
+source script init
+
+
+
+### 本地运行
 
 ```go
 go get github.com/micro/go-micro/v2
@@ -19,7 +33,6 @@ go build
 + protoc 下载
 
 https://github.com/protocolbuffers/protobuf/releases
-
 
 ```s
 protoc --proto_path=. --micro_out=../ --go_out=../ userModel.proto

@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"encoding/base64"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -13,7 +15,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-// 签发用户token
+// 签发用户 token
 func GenerateToken(id uint) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(24 * time.Hour)
@@ -29,7 +31,7 @@ func GenerateToken(id uint) (string, error) {
 	return token, err
 }
 
-// 验证用户token
+// 验证用户 token
 func ParseToken(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (i interface{}, e error) {
 		return jwtSecret, nil
@@ -40,4 +42,18 @@ func ParseToken(token string) (*Claims, error) {
 		}
 	}
 	return nil, err
+}
+
+// 验证用户名和密码
+func ParseBasicAuth(auth string) (username, password string, ok bool) {
+	c, err := base64.StdEncoding.DecodeString(auth)
+	if err != nil {
+		return "", "", false
+	}
+	cs := string(c)
+	username, password, ok = strings.Cut(cs, ":")
+	if !ok {
+		return "", "", false
+	}
+	return username, password, true
 }

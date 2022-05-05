@@ -36,7 +36,7 @@ func Router() *gin.Engine {
 
 		// 需要登录保护
 		apiAuthed := apiv1.Group("/")
-		apiAuthed.Use(middleware.JWT())
+		apiAuthed.Use(middleware.Authorization())
 		{
 			apiOrder := apiAuthed.Group("/orders")
 			{
