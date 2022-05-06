@@ -3,7 +3,7 @@ package service
 import (
 	"app/config"
 	"app/models"
-	"app/pkg/logging"
+	"app/pkg/logger"
 	"app/pkg/utils"
 	"app/schema"
 	"net/http"
@@ -90,7 +90,7 @@ func CreateOrder(ginCtx *gin.Context) {
 
 	// 获取当前登录用户
 	user := utils.GetCurrentUser(ginCtx)
-	logging.Info("user: %+v", user)
+	logger.Info("user: %+v", user)
 
 	order := &models.Order{
 		Name:   req.Name,
