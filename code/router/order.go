@@ -1,13 +1,13 @@
 package router
 
 import (
-	"app/service"
+	apiv1 "app/api/v1"
 
 	"github.com/gin-gonic/gin"
 )
 
 // 路由 /api/v1/orders
 func setupOrderRouter(router *gin.RouterGroup) {
-	router.GET("", service.GetOrderList)
-	router.POST("", service.CreateOrder)
+	router.GET("", apiv1.GetOrderList)
+	router.POST("", apiv1.CreateOrder)
 }

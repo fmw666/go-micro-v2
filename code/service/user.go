@@ -4,11 +4,12 @@ import (
 	"app/models"
 	"app/pkg/utils"
 	"app/schema"
+	"errors"
 
 	"github.com/gin-gonic/gin"
 )
 
-func BuildUser(user models.User) *schema.UserResp {
+func buildUser(user models.User) *schema.UserResp {
 	return &schema.UserResp{
 		ID:        uint(user.Id),
 		Username:  user.Username,
@@ -17,93 +18,48 @@ func BuildUser(user models.User) *schema.UserResp {
 	}
 }
 
-// UserRegister 用户注册
-// @Summary 用户注册
-// @Description User 服务中提供的用户注册服务
-// @Tags User 服务
-// @Accept  json
-// @Produce  json
-// @Param body body schema.RegisterReq true "注册"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
-// @Router /user/register [post]
-func UserRegister(ginCtx *gin.Context) {
-	// 获取 body 内容
-	var registerReq schema.RegisterReq
-	if err := ginCtx.ShouldBindJSON(&registerReq); err != nil {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "请求参数错误"})
-		return
-	}
+func UserRegister(req schema.RegisterReq) (*schema.UserResp, error) {
 	// 校验用户名是否已经存在
 	var count int64 = 0
-	if err := models.DB.Model(&models.User{}).Where("username = ?", registerReq.Username).Count(&count).Error; err != nil {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "数据库查询错误"})
-		return
+	if err := models.DB.Model(&models.User{}).Where("username = ?", req.Username).Count(&count).Error; err != nil {
+		// 数据库查询错误
+		return nil, err
 	}
 	if count > 0 {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "用户名已存在"})
-		return
+		return nil, errors.New("用户名已经存在")
 	}
 	// 创建用户
 	user := models.User{
-		Username: registerReq.Username,
+		Username: req.Username,
 	}
 	// 加密密码
-	if err := user.SetPassword(registerReq.Password); err != nil {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "密码加密错误"})
-		return
+	if err := user.SetPassword(req.Password); err != nil {
+		return nil, err
 	}
 	// 插入数据库
 	if err := models.DB.Create(&user).Error; err != nil {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "数据库创建错误"})
-		return
+		return nil, err
 	}
-	ginCtx.JSON(200, gin.H{
-		"code": 200,
-		"msg":  "ok",
-		"data": gin.H{
-			"user": BuildUser(user),
-		},
-	})
+	// 返回用户信息
+	return buildUser(user), nil
 }
 
-// UserLogin 用户登录
-// @Summary 用户登录
-// @Description User 服务中提供的用户登录服务
-// @Tags User 服务
-// @Accept  json
-// @Produce  json
-// @Param body body schema.LoginReq true "登录"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
-// @Router /user/login [post]
-func UserLogin(ginCtx *gin.Context) {
-	// 获取 body 内容
-	var loginReq schema.LoginReq
-	if err := ginCtx.ShouldBindJSON(&loginReq); err != nil {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "请求参数错误"})
-		return
-	}
+func UserLogin(req schema.LoginReq) (interface{}, error) {
 	// 判断用户名是否存在
 	var user models.User
-	if err := models.DB.Where("username = ?", loginReq.Username).First(&user).Error; err != nil {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "用户名不存在"})
-		return
+	if err := models.DB.Where("username = ?", req.Username).First(&user).Error; err != nil {
+		return nil, errors.New("用户名不存在")
 	}
 	// 校验密码
-	if !user.CheckPassword(loginReq.Password) {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "密码错误"})
-		return
+	if !user.CheckPassword(req.Password) {
+		return nil, errors.New("密码错误")
 	}
 	// 获取 token
 	token, _ := utils.GenerateToken(uint(user.Id))
-	// 存入 session
-	utils.SetCurrentUser(ginCtx, &user)
 
-	ginCtx.JSON(200, gin.H{
-		"code": 200,
-		"msg":  "ok",
-		"data": gin.H{
-			"user":  BuildUser(user),
-			"token": token,
-		},
-	})
+	data := gin.H{
+		"token": token,
+		"user":  buildUser(user),
+	}
+	return data, nil
 }
