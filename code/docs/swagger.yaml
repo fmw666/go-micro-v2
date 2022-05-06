@@ -6,6 +6,9 @@ definitions:
         type: string
       username:
         type: string
+    required:
+    - password
+    - username
     type: object
   schema.OrderCreateReq:
     properties:
@@ -20,6 +23,10 @@ definitions:
         type: string
       username:
         type: string
+    required:
+    - password
+    - password_confirm
+    - username
     type: object
 host: localhost:8080
 info:

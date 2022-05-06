@@ -179,6 +179,10 @@ const docTemplate = `{
     "definitions": {
         "schema.LoginReq": {
             "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
             "properties": {
                 "password": {
                     "type": "string"
@@ -198,6 +202,11 @@ const docTemplate = `{
         },
         "schema.RegisterReq": {
             "type": "object",
+            "required": [
+                "password",
+                "password_confirm",
+                "username"
+            ],
             "properties": {
                 "password": {
                     "type": "string"

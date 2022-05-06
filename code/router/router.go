@@ -2,7 +2,6 @@ package router
 
 import (
 	"app/middleware"
-	"app/service"
 
 	_ "app/docs"
 
@@ -28,24 +27,13 @@ func Router() *gin.Engine {
 
 	// 路由规则
 	apiv1 := ginRouter.Group("/api/v1")
-	{
-		apiv1.GET("ping", func(context *gin.Context) {
-			context.JSON(200, "success")
-		})
-		// 用户服务
-		apiv1.POST("/user/register", service.UserRegister)
-		apiv1.POST("/user/login", service.UserLogin)
+	setupPingRouter(apiv1)
+	apiUser := apiv1.Group("/user")
+	setupUserRouter(apiUser)
+	// 需要登录的路由
+	apiOrder := apiv1.Group("/orders")
+	apiOrder.Use(middleware.Authorization())
+	setupOrderRouter(apiOrder)
 
-		// 需要登录保护
-		apiAuthed := apiv1.Group("/")
-		apiAuthed.Use(middleware.Authorization())
-		{
-			apiOrder := apiAuthed.Group("/orders")
-			{
-				apiOrder.GET("", service.GetOrderList)
-				apiOrder.POST("", service.CreateOrder)
-			}
-		}
-	}
 	return ginRouter
 }

@@ -172,6 +172,10 @@
     "definitions": {
         "schema.LoginReq": {
             "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
             "properties": {
                 "password": {
                     "type": "string"
@@ -191,6 +195,11 @@
         },
         "schema.RegisterReq": {
             "type": "object",
+            "required": [
+                "password",
+                "password_confirm",
+                "username"
+            ],
             "properties": {
                 "password": {
                     "type": "string"
