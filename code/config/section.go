@@ -6,8 +6,6 @@ type App struct {
 	DefaultLimit  string
 }
 
-var AppSetting = &App{}
-
 // db 配置
 type Database struct {
 	Type     string
@@ -19,4 +17,5 @@ type Database struct {
 	Url      string
 }
 
+var AppSetting = &App{}
 var DatabaseSetting = &Database{}
