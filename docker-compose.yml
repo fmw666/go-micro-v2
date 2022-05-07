@@ -23,6 +23,7 @@ services:
     image: mysql:5.7
     environment:
       - TZ=${TZ}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}              # 设置 Mysql 数据库名称
       - MYSQL_USER=${MYSQL_USERNAME}                  # 设置 Mysql 用户名称
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}              # 设置 Mysql 用户密码
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}    # 设置 Mysql root 用户密码

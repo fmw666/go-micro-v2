@@ -20,6 +20,10 @@ RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/' /etc/apt/sources.lis
 # $GOPATH/bin 添加到环境变量中
 ENV PATH $GOPATH/bin:$PATH
 
+# 安装 swag
+USER root
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
 # 清理垃圾
 USER root
 RUN apt-get clean && \
