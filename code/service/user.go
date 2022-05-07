@@ -24,12 +24,17 @@ func UserRegister(ginCtx *gin.Context) (*schema.UserResp, e.ErrorCode) {
 	if err := ginCtx.ShouldBindJSON(&req); err != nil {
 		return nil, e.ERROR_PARAM_INVALID
 	}
+	// 判断密码是否一致
+	if req.Password != req.PasswordConfirm {
+		return nil, e.ERROR_PASSWORD_NOT_MATCH
+	}
 	// 校验用户名是否已经存在
 	var count int64 = 0
 	if err := models.DB.Model(&models.User{}).Where("username = ?", req.Username).Count(&count).Error; err != nil {
 		// 数据库查询错误
 		return nil, e.ERROR_DB_BASE
 	}
+	// 判断用户名是否已经存在
 	if count > 0 {
 		return nil, e.ERROR_USER_EXIST
 	}

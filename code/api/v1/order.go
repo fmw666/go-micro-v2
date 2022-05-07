@@ -2,9 +2,9 @@ package v1
 
 import (
 	"app/config"
-	"app/pkg/e"
+	"app/pkg/utils"
+	"app/schema"
 	"app/service"
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -29,20 +29,13 @@ func GetOrderList(ginCtx *gin.Context) {
 	userID, _ := strconv.Atoi(ginCtx.DefaultQuery("user_id", "0"))
 
 	count, data, code := service.GetOrderList(offset, limit, userID)
-	if code != e.SUCCESS {
-		ginCtx.JSON(http.StatusOK, gin.H{"code": code, "msg": e.GetMsg(code)})
-		return
-	}
 
-	ginCtx.JSON(http.StatusOK, gin.H{
-		"code": e.SUCCESS,
-		"data": data,
-		"page_info": gin.H{
-			"total":  count,
-			"offset": offset,
-			"limit":  limit,
-		},
-	})
+	pageInfo := schema.PageInfo{
+		Total:  count,
+		Offset: int64(offset),
+		Limit:  int64(limit),
+	}
+	utils.Response(ginCtx, code, data, pageInfo)
 }
 
 // CreateOrder 创建订单
@@ -58,10 +51,5 @@ func GetOrderList(ginCtx *gin.Context) {
 // @Router /orders [post]
 func CreateOrder(ginCtx *gin.Context) {
 	data, code := service.CreateOrder(ginCtx)
-	if code != e.SUCCESS {
-		ginCtx.JSON(http.StatusOK, gin.H{"code": code, "msg": e.GetMsg(code)})
-		return
-	}
-
-	ginCtx.JSON(http.StatusOK, gin.H{"code": e.SUCCESS, "data": data})
+	utils.Response(ginCtx, code, data)
 }

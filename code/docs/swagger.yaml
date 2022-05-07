@@ -106,7 +106,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":"ok"}'
+          description: '{"code":0,"data":{}}'
           schema:
             type: string
       summary: 用户登录
@@ -128,7 +128,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":"ok"}'
+          description: '{"code":0,"data":{}}'
           schema:
             type: string
       summary: 用户注册

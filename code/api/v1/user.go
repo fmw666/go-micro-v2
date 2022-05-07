@@ -1,9 +1,8 @@
 package v1
 
 import (
-	"app/pkg/e"
+	"app/pkg/utils"
 	"app/service"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,15 +14,11 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param body body schema.RegisterReq true "注册"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Success 200 {string} json "{"code":0,"data":{}}"
 // @Router /user/register [post]
 func UserRegister(ginCtx *gin.Context) {
 	data, code := service.UserRegister(ginCtx)
-	if code != e.SUCCESS {
-		ginCtx.JSON(http.StatusOK, gin.H{"code": code, "msg": e.GetMsg(code)})
-		return
-	}
-	ginCtx.JSON(http.StatusOK, gin.H{"code": e.SUCCESS, "data": data})
+	utils.Response(ginCtx, code, data)
 }
 
 // UserLogin 用户登录
@@ -33,13 +28,9 @@ func UserRegister(ginCtx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param body body schema.LoginReq true "登录"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Success 200 {string} json "{"code":0,"data":{}}"
 // @Router /user/login [post]
 func UserLogin(ginCtx *gin.Context) {
 	data, code := service.UserLogin(ginCtx)
-	if code != e.SUCCESS {
-		ginCtx.JSON(http.StatusOK, gin.H{"code": code, "msg": e.GetMsg(code)})
-		return
-	}
-	ginCtx.JSON(http.StatusOK, gin.H{"code": e.SUCCESS, "data": data})
+	utils.Response(ginCtx, code, data)
 }
