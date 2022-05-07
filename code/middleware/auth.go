@@ -2,7 +2,9 @@ package middleware
 
 import (
 	"app/models"
+	"app/pkg/e"
 	"app/pkg/utils"
+	"net/http"
 
 	"strings"
 
@@ -25,9 +27,9 @@ func Authorization() gin.HandlerFunc {
 			success := false
 			switch authType {
 			case "Basic":
-				basicAuth(authValue, &success)
+				basicAuth(authValue, ginCtx, &success)
 			case "Bearer":
-				jwtAuth(authValue, &success)
+				jwtAuth(authValue, ginCtx, &success)
 			default:
 				continue
 			}
@@ -38,16 +40,17 @@ func Authorization() gin.HandlerFunc {
 			}
 		}
 		// 如果认证失败，则返回鉴权失败
-		ginCtx.JSON(500, gin.H{
-			"code": 401,
-			"msg":  "鉴权失败",
+		var code e.ErrorCode = e.ERROR_AUTH_BASE
+		ginCtx.JSON(http.StatusUnauthorized, gin.H{
+			"code": code,
+			"msg":  e.GetMsg(code),
 		})
 		ginCtx.Abort()
 	}
 }
 
 // Basic auth 用户认证
-func basicAuth(auth string, success *bool) {
+func basicAuth(auth string, ginCtx *gin.Context, success *bool) {
 	username, password, ok := utils.ParseBasicAuth(auth)
 	if !ok {
 		return
@@ -62,18 +65,29 @@ func basicAuth(auth string, success *bool) {
 	}
 	// 认证成功
 	*success = true
+	// 设置用户变量
+	ginCtx.Set("user", user)
 }
 
 // JWT token 用户认证
-func jwtAuth(auth string, success *bool) {
+func jwtAuth(auth string, ginCtx *gin.Context, success *bool) {
 	if auth == "" {
 		return
 	}
 	// 校验 token
-	_, err := utils.ParseToken(auth)
+	claims, err := utils.ParseToken(auth)
 	if err != nil {
+		return
+	}
+	// 获取 user_id
+	userID := claims.Id
+	// 校验 user_id
+	var user models.User
+	if err := models.DB.Where("id = ?", userID).First(&user).Error; err != nil {
 		return
 	}
 	// 认证成功
 	*success = true
+	// 设置用户变量
+	ginCtx.Keys["user"] = user
 }

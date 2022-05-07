@@ -8,7 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-var jwtSecret = []byte("TodoList")
+var jwtSecret = []byte("secret")
 
 type Claims struct {
 	Id uint `json:"id"`
@@ -23,7 +23,7 @@ func GenerateToken(id uint) (string, error) {
 		Id: id,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    "todoList",
+			Issuer:    "mall",
 		},
 	}
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

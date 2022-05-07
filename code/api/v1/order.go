@@ -2,7 +2,7 @@ package v1
 
 import (
 	"app/config"
-	"app/schema"
+	"app/pkg/e"
 	"app/service"
 	"net/http"
 	"strconv"
@@ -28,17 +28,14 @@ func GetOrderList(ginCtx *gin.Context) {
 	limit, _ := strconv.Atoi(ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit))
 	userID, _ := strconv.Atoi(ginCtx.DefaultQuery("user_id", "0"))
 
-	count, data, err := service.GetOrderList(offset, limit, userID)
-	if err != nil {
-		ginCtx.JSON(200, gin.H{
-			"code": 500,
-			"msg":  err.Error(),
-		})
+	count, data, code := service.GetOrderList(offset, limit, userID)
+	if code != e.SUCCESS {
+		ginCtx.JSON(http.StatusOK, gin.H{"code": code, "msg": e.GetMsg(code)})
 		return
 	}
 
 	ginCtx.JSON(http.StatusOK, gin.H{
-		"code": 200,
+		"code": e.SUCCESS,
 		"data": data,
 		"page_info": gin.H{
 			"total":  count,
@@ -60,26 +57,11 @@ func GetOrderList(ginCtx *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /orders [post]
 func CreateOrder(ginCtx *gin.Context) {
-	var req schema.OrderCreateReq
-	err := ginCtx.BindJSON(&req)
-	if err != nil {
-		ginCtx.JSON(http.StatusOK, gin.H{
-			"code": 500,
-			"msg":  err.Error(),
-		})
-		return
-	}
-	data, err := service.CreateOrder(req)
-	if err != nil {
-		ginCtx.JSON(http.StatusOK, gin.H{
-			"code": 500,
-			"msg":  err.Error(),
-		})
+	data, code := service.CreateOrder(ginCtx)
+	if code != e.SUCCESS {
+		ginCtx.JSON(http.StatusOK, gin.H{"code": code, "msg": e.GetMsg(code)})
 		return
 	}
 
-	ginCtx.JSON(http.StatusOK, gin.H{
-		"code": 0,
-		"data": data,
-	})
+	ginCtx.JSON(http.StatusOK, gin.H{"code": e.SUCCESS, "data": data})
 }

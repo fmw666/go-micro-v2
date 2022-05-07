@@ -1,8 +1,9 @@
 package v1
 
 import (
-	"app/schema"
+	"app/pkg/e"
 	"app/service"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,22 +18,12 @@ import (
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /user/register [post]
 func UserRegister(ginCtx *gin.Context) {
-	// 获取 body 内容
-	var req schema.RegisterReq
-	if err := ginCtx.ShouldBindJSON(&req); err != nil {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "请求参数错误"})
+	data, code := service.UserRegister(ginCtx)
+	if code != e.SUCCESS {
+		ginCtx.JSON(http.StatusOK, gin.H{"code": code, "msg": e.GetMsg(code)})
 		return
 	}
-	data, err := service.UserRegister(req)
-	if err != nil {
-		ginCtx.JSON(200, gin.H{"code": 500, "msg": err.Error()})
-		return
-	}
-	ginCtx.JSON(200, gin.H{
-		"code": 200,
-		"msg":  "ok",
-		"data": data,
-	})
+	ginCtx.JSON(http.StatusOK, gin.H{"code": e.SUCCESS, "data": data})
 }
 
 // UserLogin 用户登录
@@ -45,20 +36,10 @@ func UserRegister(ginCtx *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /user/login [post]
 func UserLogin(ginCtx *gin.Context) {
-	// 获取 body 内容
-	var loginReq schema.LoginReq
-	if err := ginCtx.ShouldBindJSON(&loginReq); err != nil {
-		ginCtx.JSON(200, gin.H{"code": 400, "msg": "请求参数错误"})
+	data, code := service.UserLogin(ginCtx)
+	if code != e.SUCCESS {
+		ginCtx.JSON(http.StatusOK, gin.H{"code": code, "msg": e.GetMsg(code)})
 		return
 	}
-	data, err := service.UserLogin(loginReq)
-	if err != nil {
-		ginCtx.JSON(200, gin.H{"code": 500, "msg": err.Error()})
-		return
-	}
-	ginCtx.JSON(200, gin.H{
-		"code": 200,
-		"msg":  "ok",
-		"data": data,
-	})
+	ginCtx.JSON(http.StatusOK, gin.H{"code": e.SUCCESS, "data": data})
 }
