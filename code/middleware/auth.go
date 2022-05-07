@@ -10,8 +10,8 @@ import (
 )
 
 func Authorization() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		authHeaders := c.GetHeader("Authorization")
+	return func(ginCtx *gin.Context) {
+		authHeaders := ginCtx.GetHeader("Authorization")
 		authHeaderArr := strings.Split(authHeaders, ", ")
 		// 多个 Authorization 头部，满足一个即可
 		for _, authHeader := range authHeaderArr {
@@ -33,16 +33,16 @@ func Authorization() gin.HandlerFunc {
 			}
 			// 如果认证成功，则结束函数
 			if success {
-				c.Next()
+				ginCtx.Next()
 				return
 			}
 		}
 		// 如果认证失败，则返回鉴权失败
-		c.JSON(500, gin.H{
+		ginCtx.JSON(500, gin.H{
 			"code": 401,
 			"msg":  "鉴权失败",
 		})
-		c.Abort()
+		ginCtx.Abort()
 	}
 }
 

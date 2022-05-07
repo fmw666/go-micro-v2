@@ -8,16 +8,16 @@ import (
 
 // 错误处理中间件
 func ErrorMiddleware() gin.HandlerFunc {
-	return func(context *gin.Context) {
+	return func(ginCtx *gin.Context) {
 		defer func() {
 			if r := recover(); r != nil {
-				context.JSON(200, gin.H{
+				ginCtx.JSON(200, gin.H{
 					"code": 404,
 					"msg":  fmt.Sprintf("%s", r),
 				})
-				context.Abort()
+				ginCtx.Abort()
 			}
 		}()
-		context.Next()
+		ginCtx.Next()
 	}
 }
