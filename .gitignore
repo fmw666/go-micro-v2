@@ -16,6 +16,7 @@ ENV/
 
 # log file
 *.log
+log/
 
 # tmp file
 tmp*
