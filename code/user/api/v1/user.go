@@ -2,7 +2,12 @@ package v1
 
 import (
 	"bytes"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
+	"strconv"
+	"user/config"
+	"user/models"
 	"user/pkg/e"
 	"user/pkg/utils"
 	"user/pkg/utils/consul"
@@ -76,17 +81,19 @@ func UserOrderCreate(ginCtx *gin.Context) {
 		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_NOT_FOUND)
 		return
 	}
+	// 获取当前登录用户
+	user := ginCtx.Keys["user"].(models.User)
 	// 调用 Order 服务
 	url := "http://" + hostAddress + "/api/v1/orders"
-	resp, _ := http.Post(url, "application/json;charset=utf-8", bytes.NewBuffer([]byte("")))
-	// 获取当前登录用户
-	// user := ginCtx.Keys["user"].(models.User)
-	// 	data, code := service.CreateOrder(req.Name, user.Id)
-	// 	utils.Response(ginCtx, code, data)
-	ginCtx.JSON(200, gin.H{
-		"code": 0,
-		"data": resp,
-	})
+	body := bytes.NewBuffer([]byte("{\"name\":\"" + req.Name + "\",\"user_id\":" + strconv.FormatInt(int64(user.Id), 10) + "}"))
+	resp, _ := http.Post(url, "application/json;charset=utf-8", body)
+
+	respData, _ := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	var data interface{}
+	json.Unmarshal(respData, &data)
+
+	ginCtx.JSON(http.StatusOK, data)
 }
 
 // GetUserOrderList 用户订单列表
@@ -102,8 +109,8 @@ func UserOrderCreate(ginCtx *gin.Context) {
 // @Success 200 {string} json "{"code":0,"data":{}}"
 // @Router /user/orders [get]
 func GetUserOrderList(ginCtx *gin.Context) {
-	// offset, _ := strconv.Atoi(ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset))
-	// limit, _ := strconv.Atoi(ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit))
+	offset := ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset)
+	limit := ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit)
 
 	// 获取 Order 服务地址
 	hostAddress, err := consul.GetServiceAddr("rpcOrderService")
@@ -111,21 +118,17 @@ func GetUserOrderList(ginCtx *gin.Context) {
 		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_NOT_FOUND)
 		return
 	}
+	// 获取当前登录用户
+	user := ginCtx.Keys["user"].(models.User)
 	// 调用 Order 服务
 	url := "http://" + hostAddress + "/api/v1/orders"
-	resp, _ := http.Post(url, "application/json;charset=utf-8", bytes.NewBuffer([]byte("{\"name\":\"test\",\"age\":18}")))
-	ginCtx.JSON(200, gin.H{
-		"code": 0,
-		"data": resp,
-	})
+	url += "?offset=" + offset + "&limit=" + limit + "&user_id=" + strconv.FormatInt(int64(user.Id), 10)
+	resp, _ := http.Get(url)
 
-	// // 获取当前登录用户
-	// user := ginCtx.Keys["user"].(models.User)
-	// count, data, code := service.GetOrderList(offset, limit, user.Id)
-	// pageInfo := schema.PageInfoResp{
-	// 	Total:  count,
-	// 	Offset: int64(offset),
-	// 	Limit:  int64(limit),
-	// }
-	// utils.Response(ginCtx, code, data, pageInfo)
+	respData, _ := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	var data interface{}
+	json.Unmarshal(respData, &data)
+
+	ginCtx.JSON(http.StatusOK, data)
 }
