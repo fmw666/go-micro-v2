@@ -4,20 +4,20 @@ import (
 	"app/models"
 	"app/pkg/e"
 	"app/schema"
-
-	"github.com/gin-gonic/gin"
 )
 
+// 订单详情
 func buildOrder(order models.Order) *schema.OrderResp {
 	return &schema.OrderResp{
-		ID:        uint(order.Id),
+		ID:        order.Id,
 		Name:      order.Name,
-		UserID:    uint(order.UserID),
+		UserID:    order.UserID,
 		CreatedAt: order.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt: order.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 }
 
+// 订单列表
 func buildOrderList(orders []*models.Order) []*schema.OrderResp {
 	data := make([]*schema.OrderResp, 0)
 	for _, order := range orders {
@@ -26,13 +26,14 @@ func buildOrderList(orders []*models.Order) []*schema.OrderResp {
 	return data
 }
 
-func GetOrderList(offset, limit int, userID int) (int64, []*schema.OrderResp, e.ErrorCode) {
+// 获取订单列表
+func GetOrderList(offset, limit int, userID ...uint32) (int64, []*schema.OrderResp, e.ErrorCode) {
 	var count int64
 	data := make([]*models.Order, 0)
 	// 查询订单列表
 	orders := models.DB.Model(new(models.Order))
-	if userID != 0 {
-		orders = orders.Where("user_id = ?", userID)
+	if len(userID) > 0 {
+		orders = orders.Where("user_id = ?", userID[0])
 	}
 	err := orders.Count(&count).Offset(offset).Limit(limit).Order("id desc").Find(&data).Error
 	if err != nil {
@@ -41,22 +42,15 @@ func GetOrderList(offset, limit int, userID int) (int64, []*schema.OrderResp, e.
 	return count, buildOrderList(data), e.SUCCESS
 }
 
-func CreateOrder(ginCtx *gin.Context) (*schema.OrderResp, e.ErrorCode) {
-	var req schema.OrderCreateReq
-	err := ginCtx.BindJSON(&req)
-	if err != nil {
-		return nil, e.ERROR_PARAM_INVALID
-	}
-
-	// 获取当前登录用户
-	user := ginCtx.Keys["user"].(models.User)
-	// 获取当前登录用户
+// 创建订单
+func CreateOrder(name string, userID uint32) (*schema.OrderResp, e.ErrorCode) {
+	// 创建订单模型
 	order := &models.Order{
-		Name:   req.Name,
-		UserID: uint(user.Id),
+		Name:   name,
+		UserID: userID,
 	}
 
-	err = models.DB.Create(order).Error
+	err := models.DB.Create(order).Error
 	if err != nil {
 		return nil, e.ERROR_DB_BASE
 	}

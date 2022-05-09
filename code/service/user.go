@@ -18,19 +18,14 @@ func buildUser(user models.User) *schema.UserResp {
 	}
 }
 
-func UserRegister(ginCtx *gin.Context) (*schema.UserResp, e.ErrorCode) {
-	// 获取 body 内容
-	var req schema.RegisterReq
-	if err := ginCtx.ShouldBindJSON(&req); err != nil {
-		return nil, e.ERROR_PARAM_INVALID
-	}
+func UserRegister(username, password, passwordConfirm string) (*schema.UserResp, e.ErrorCode) {
 	// 判断密码是否一致
-	if req.Password != req.PasswordConfirm {
+	if password != passwordConfirm {
 		return nil, e.ERROR_PASSWORD_NOT_MATCH
 	}
 	// 校验用户名是否已经存在
 	var count int64 = 0
-	if err := models.DB.Model(&models.User{}).Where("username = ?", req.Username).Count(&count).Error; err != nil {
+	if err := models.DB.Model(&models.User{}).Where("username = ?", username).Count(&count).Error; err != nil {
 		// 数据库查询错误
 		return nil, e.ERROR_DB_BASE
 	}
@@ -40,10 +35,10 @@ func UserRegister(ginCtx *gin.Context) (*schema.UserResp, e.ErrorCode) {
 	}
 	// 创建用户
 	user := models.User{
-		Username: req.Username,
+		Username: username,
 	}
 	// 加密密码
-	if err := user.SetPassword(req.Password); err != nil {
+	if err := user.SetPassword(password); err != nil {
 		return nil, e.ERROR_USER_SET_PASSWORD
 	}
 	// 插入数据库
@@ -54,19 +49,14 @@ func UserRegister(ginCtx *gin.Context) (*schema.UserResp, e.ErrorCode) {
 	return buildUser(user), e.SUCCESS
 }
 
-func UserLogin(ginCtx *gin.Context) (interface{}, e.ErrorCode) {
-	// 获取 body 内容
-	var req schema.LoginReq
-	if err := ginCtx.ShouldBindJSON(&req); err != nil {
-		return nil, e.ERROR_PARAM_INVALID
-	}
+func UserLogin(username, password string) (interface{}, e.ErrorCode) {
 	// 判断用户名是否存在
 	var user models.User
-	if err := models.DB.Where("username = ?", req.Username).First(&user).Error; err != nil {
+	if err := models.DB.Where("username = ?", username).First(&user).Error; err != nil {
 		return nil, e.ERROR_USER_NOT_FOUND
 	}
 	// 校验密码
-	if !user.CheckPassword(req.Password) {
+	if !user.CheckPassword(password) {
 		return nil, e.ERROR_USER_PASSWORD
 	}
 	// 获取 token

@@ -10,6 +10,10 @@ type RegisterReq struct {
 	PasswordConfirm string `json:"password_confirm" binding:"required"`
 }
 
+type UserOrderCreateReq struct {
+	Name string `json:"name" binding:"required"`
+}
+
 type UserResp struct {
 	ID        uint   `json:"id"`
 	Username  string `json:"username"`
