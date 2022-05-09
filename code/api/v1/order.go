@@ -32,9 +32,9 @@ func GetOrderList(ginCtx *gin.Context) {
 	var code e.ErrorCode
 	switch {
 	case userID > 0:
-		count, data, code := service.GetOrderList(offset, limit, uint32(userID))
+		count, data, code = service.GetOrderList(offset, limit, uint32(userID))
 	case userID == 0:
-		count, data, code := service.GetOrderList(offset, limit)
+		count, data, code = service.GetOrderList(offset, limit)
 	}
 
 	pageInfo := schema.PageInfoResp{
