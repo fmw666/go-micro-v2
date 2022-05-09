@@ -17,6 +17,7 @@ import (
 // @Tags Order 服务
 // @Accept  json
 // @Produce  json
+// @Param user_id query int false "用户 id"
 // @Param offset query int false "偏移量"
 // @Param limit query int false "限制数量"
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
@@ -24,8 +25,17 @@ import (
 func GetOrderList(ginCtx *gin.Context) {
 	offset, _ := strconv.Atoi(ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset))
 	limit, _ := strconv.Atoi(ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit))
+	userID, _ := strconv.Atoi(ginCtx.DefaultQuery("user_id", "0"))
 
-	count, data, code := service.GetOrderList(offset, limit)
+	var count int64
+	var data interface{}
+	var code e.ErrorCode
+	switch {
+	case userID > 0:
+		count, data, code := service.GetOrderList(offset, limit, uint32(userID))
+	case userID == 0:
+		count, data, code := service.GetOrderList(offset, limit)
+	}
 
 	pageInfo := schema.PageInfoResp{
 		Total:  count,

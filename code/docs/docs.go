@@ -32,6 +32,12 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
+                        "description": "用户 id",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
                         "description": "偏移量",
                         "name": "offset",
                         "in": "query"
