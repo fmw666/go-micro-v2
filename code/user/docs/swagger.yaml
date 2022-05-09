@@ -1,0 +1,142 @@
+basePath: /api/v1
+definitions:
+  schema.LoginReq:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  schema.RegisterReq:
+    properties:
+      password:
+        type: string
+      password_confirm:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - password_confirm
+    - username
+    type: object
+  schema.UserOrderCreateReq:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: This is a sample server celler server.
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: User 服务中提供的用户登录服务
+      parameters:
+      - description: 登录
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"data":{}}'
+          schema:
+            type: string
+      summary: 用户登录
+      tags:
+      - User 服务
+  /user/orders:
+    get:
+      consumes:
+      - application/json
+      description: User 服务中提供的用户订单列表服务
+      parameters:
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"data":{}}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - BasicAuth: []
+      summary: 用户订单列表
+      tags:
+      - User 服务
+    post:
+      consumes:
+      - application/json
+      description: User 服务中提供的用户创建订单服务
+      parameters:
+      - description: 订单
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.UserOrderCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"data":{}}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - BasicAuth: []
+      summary: 用户创建订单
+      tags:
+      - User 服务
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: User 服务中提供的用户注册服务
+      parameters:
+      - description: 注册
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/schema.RegisterReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"data":{}}'
+          schema:
+            type: string
+      summary: 用户注册
+      tags:
+      - User 服务
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+  BasicAuth:
+    type: basic
+swagger: "2.0"

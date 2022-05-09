@@ -6,18 +6,6 @@ import (
 	"github.com/go-ini/ini"
 )
 
-type Database struct {
-	Type     string
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Name     string
-	Url      string
-}
-
-var DatabaseSetting = &Database{}
-
 var cfg *ini.File
 
 func init() {
@@ -27,6 +15,7 @@ func init() {
 		fmt.Printf("Fail to read file: %v", err)
 	}
 
+	mapTo("app", AppSetting)
 	mapTo("db", DatabaseSetting)
 
 	DatabaseSetting.Url = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
