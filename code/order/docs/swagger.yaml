@@ -1,0 +1,62 @@
+basePath: /api/v1
+definitions:
+  schema.OrderCreateReq:
+    properties:
+      name:
+        type: string
+      user_id:
+        type: integer
+    type: object
+host: localhost:8082
+info:
+  contact: {}
+  description: Order micro service.
+  title: Order API
+  version: "1.0"
+paths:
+  /orders:
+    get:
+      consumes:
+      - application/json
+      description: Order 服务中提供的获取订单列表服务
+      parameters:
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 限制数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 获取订单列表
+      tags:
+      - Order 服务
+    post:
+      consumes:
+      - application/json
+      description: Order 服务中提供的创建订单服务
+      parameters:
+      - description: 订单
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/schema.OrderCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 创建订单
+      tags:
+      - Order 服务
+swagger: "2.0"

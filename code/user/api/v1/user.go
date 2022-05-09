@@ -113,7 +113,7 @@ func GetUserOrderList(ginCtx *gin.Context) {
 	}
 	// 调用 Order 服务
 	url := "http://" + hostAddress + "/api/v1/orders"
-	resp, _ := http.Post(url, "application/json;charset=utf-8", bytes.NewBuffer([]byte("")))
+	resp, _ := http.Post(url, "application/json;charset=utf-8", bytes.NewBuffer([]byte("{\"name\":\"test\",\"age\":18}")))
 	ginCtx.JSON(200, gin.H{
 		"code": 0,
 		"data": resp,
