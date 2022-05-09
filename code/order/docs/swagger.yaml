@@ -20,6 +20,10 @@ paths:
       - application/json
       description: Order 服务中提供的获取订单列表服务
       parameters:
+      - description: 用户 id
+        in: query
+        name: user_id
+        type: integer
       - description: 偏移量
         in: query
         name: offset

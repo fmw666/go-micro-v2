@@ -17,7 +17,7 @@ import (
 // @Tags Order 服务
 // @Accept  json
 // @Produce  json
-// @Param user_id query int true "用户 id"
+// @Param user_id query int false "用户 id"
 // @Param offset query int false "偏移量"
 // @Param limit query int false "限制数量"
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
