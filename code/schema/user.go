@@ -15,7 +15,7 @@ type UserOrderCreateReq struct {
 }
 
 type UserResp struct {
-	ID        uint   `json:"id"`
+	ID        uint32 `json:"id"`
 	Username  string `json:"username"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`

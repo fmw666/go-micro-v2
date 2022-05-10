@@ -11,7 +11,7 @@ import (
 
 func buildUser(user models.User) *schema.UserResp {
 	return &schema.UserResp{
-		ID:        uint(user.Id),
+		ID:        user.Id,
 		Username:  user.Username,
 		CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
