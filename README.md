@@ -236,4 +236,6 @@
 | [master](https://github.com/fmw666/microservice-example/tree/master) | - | - | 描述文档 |
 | [monolithic-app](https://github.com/fmw666/microservice-example/tree/monolithic-app) | 8080 | 8080 | 单体应用代码 |
 | [microservice-app](https://github.com/fmw666/microservice-example/tree/microservice-app) | User &ensp;服务：8081<br>Order 服务：8082 | 8081, 8082 | 微服务应用代码 |
-| [microservice-app-with-gateway](https://github.com/fmw666/microservice-example/tree/microservice-app-with-gateway) | API 网关服务：8080<br>User &emsp;&ensp;服务：8081<br>Order &emsp;服务：8082 | 8080 | 微服务应用代码<br>使用网关作为入口 |
+| [microservice-app-with-service-discovery](https://github.com/fmw666/microservice-example/tree/microservice-app-with-service-discovery) | 8083 | 8083 | 微服务应用代码，同时启动服务发现 |
+| [microservice-app-with-service-discovery-and-grpc](https://github.com/fmw666/microservice-example/tree/microservice-app-with-service-discovery-and-grpc) | 8084 | 8084 | 微服务应用代码，同时启动服务发现和 gRPC |
+| [microservice-app-with-service-discovery-and-grpc-and-gateway](https://github.com/fmw666/microservice-example/tree/microservice-app-with-service-discovery-and-grpc-and-gateway) | API 网关服务：8080<br>User &emsp;&ensp;服务：8081<br>Order &emsp;服务：8082 | 8080 | 微服务应用代码<br>使用网关作为入口 |
