@@ -1,6 +1,7 @@
 package main
 
 import (
+	"order/config"
 	"order/models"
 	"order/pkg/utils/consul"
 	"order/router"
@@ -26,12 +27,12 @@ func main() {
 
 	// 获取一个微服务的实例
 	microService := web.NewService(
-		web.Name("rpcOrderService"),
+		web.Name(config.ServerSetting.MicroServiceName),
 		// 设置注册服务的过期时间
 		web.RegisterTTL(time.Second*30),
 		// 设置间隔多久再次注册服务
 		web.RegisterInterval(time.Second*20),
-		web.Address("127.0.0.1:8082"),
+		web.Address(config.ServerSetting.Host+":"+config.ServerSetting.Port),
 		web.Handler(ginRouter),
 		web.Registry(consulReg),
 	)

@@ -15,6 +15,7 @@ func init() {
 		fmt.Printf("Fail to read file: %v", err)
 	}
 
+	mapTo("server", ServerSetting)
 	mapTo("app", AppSetting)
 	mapTo("db", DatabaseSetting)
 

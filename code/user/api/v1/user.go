@@ -10,7 +10,6 @@ import (
 	"user/models"
 	"user/pkg/e"
 	"user/pkg/utils"
-	"user/pkg/utils/consul"
 	"user/schema"
 	"user/service"
 
@@ -75,16 +74,10 @@ func UserOrderCreate(ginCtx *gin.Context) {
 		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
 		return
 	}
-	// 获取 Order 服务地址
-	hostAddress, err := consul.GetServiceAddr("rpcOrderService")
-	if err != nil || hostAddress == "" {
-		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_NOT_FOUND)
-		return
-	}
 	// 获取当前登录用户
 	user := ginCtx.Keys["user"].(models.User)
 	// 调用 Order 服务
-	url := "http://" + hostAddress + "/api/v1/orders"
+	url := config.ServiceSetting.OrderServiceHost + "/api/v1/orders"
 	body := bytes.NewBuffer([]byte("{\"name\":\"" + req.Name + "\",\"user_id\":" + strconv.FormatInt(int64(user.Id), 10) + "}"))
 	resp, _ := http.Post(url, "application/json;charset=utf-8", body)
 
@@ -112,16 +105,10 @@ func GetUserOrderList(ginCtx *gin.Context) {
 	offset := ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset)
 	limit := ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit)
 
-	// 获取 Order 服务地址
-	hostAddress, err := consul.GetServiceAddr("rpcOrderService")
-	if err != nil || hostAddress == "" {
-		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_NOT_FOUND)
-		return
-	}
 	// 获取当前登录用户
 	user := ginCtx.Keys["user"].(models.User)
 	// 调用 Order 服务
-	url := "http://" + hostAddress + "/api/v1/orders"
+	url := config.ServiceSetting.OrderServiceHost + "/api/v1/orders"
 	url += "?offset=" + offset + "&limit=" + limit + "&user_id=" + strconv.FormatInt(int64(user.Id), 10)
 	resp, _ := http.Get(url)
 
