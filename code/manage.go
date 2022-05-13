@@ -63,7 +63,7 @@ func (s *Script) Start() {
 	for _, dir := range dirs {
 		if dir.IsDir() {
 			fmt.Println("开始启动 " + dir.Name() + " ...")
-			cmd := "cd " + pwdDir + "/" + dir.Name() + " && go run main.go\n"
+			cmd := "cd " + pwdDir + "/" + dir.Name() + " && go run .\n"
 			sessionName := dir.Name() + "-service"
 
 			runCmd(fmt.Sprint("screen -S " + sessionName + " -X quit"))
