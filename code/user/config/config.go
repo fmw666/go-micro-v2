@@ -15,8 +15,10 @@ func init() {
 		fmt.Printf("Fail to read file: %v", err)
 	}
 
+	mapTo("server", ServerSetting)
 	mapTo("app", AppSetting)
 	mapTo("db", DatabaseSetting)
+	mapTo("service", ServiceSetting)
 
 	DatabaseSetting.Url = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		DatabaseSetting.User,

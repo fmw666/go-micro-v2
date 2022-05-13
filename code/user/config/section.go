@@ -1,5 +1,12 @@
 package config
 
+// server 配置
+type Server struct {
+	Host             string
+	Port             string
+	MicroServiceName string
+}
+
 // app 配置
 type App struct {
 	DefaultOffset string
@@ -17,5 +24,12 @@ type Database struct {
 	Url      string
 }
 
+// service 配置
+type Service struct {
+	OrderServiceName string
+}
+
+var ServerSetting = &Server{}
 var AppSetting = &App{}
 var DatabaseSetting = &Database{}
+var ServiceSetting = &Service{}

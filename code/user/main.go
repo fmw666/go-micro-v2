@@ -2,6 +2,7 @@ package main
 
 import (
 	"time"
+	"user/config"
 	"user/models"
 	"user/pkg/utils/consul"
 	"user/router"
@@ -32,12 +33,12 @@ func main() {
 
 	// 获取一个微服务的实例
 	microService := web.NewService(
-		web.Name("rpcUserService"),
+		web.Name(config.ServerSetting.MicroServiceName),
 		// 设置注册服务过期时间
 		web.RegisterTTL(time.Second*30),
 		//设置间隔多久再次注册服务
 		web.RegisterInterval(time.Second*20),
-		web.Address("0.0.0.0:8081"),
+		web.Address(config.ServerSetting.Host+":"+config.ServerSetting.Port),
 		web.Handler(ginRouter),
 		web.Registry(consulReg),
 	)

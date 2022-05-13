@@ -113,7 +113,7 @@ func GetUserOrderList(ginCtx *gin.Context) {
 	limit := ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit)
 
 	// 获取 Order 服务地址
-	hostAddress, err := consul.GetServiceAddr("rpcOrderService")
+	hostAddress, err := consul.GetServiceAddr(config.ServiceSetting.OrderServiceName)
 	if err != nil || hostAddress == "" {
 		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_NOT_FOUND)
 		return
