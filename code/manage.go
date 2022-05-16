@@ -55,7 +55,7 @@ func (s *Script) Init() {
 	os.Chdir("..")
 }
 
-// 启动所有微服务及网关
+// 启动所有微服务
 func (s *Script) Start() {
 	// 得到当前路径
 	pwdDir, _ := os.Getwd()
