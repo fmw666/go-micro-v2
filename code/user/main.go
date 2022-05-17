@@ -4,7 +4,6 @@ import (
 	"time"
 	"user/config"
 	"user/models"
-	"user/pkg/utils/consul"
 	"user/router"
 
 	"github.com/micro/go-micro/v2/web"
@@ -28,19 +27,15 @@ func main() {
 	// gin Router 路由引擎
 	ginRouter := router.Router()
 
-	// consul 注册件
-	consulReg := consul.ConsulReg
-
 	// 获取一个微服务的实例
 	microService := web.NewService(
 		web.Name(config.ServerSetting.MicroServiceName),
 		// 设置注册服务过期时间
 		web.RegisterTTL(time.Second*30),
-		//设置间隔多久再次注册服务
+		// 设置间隔多久再次注册服务
 		web.RegisterInterval(time.Second*20),
 		web.Address(config.ServerSetting.Host+":"+config.ServerSetting.Port),
 		web.Handler(ginRouter),
-		web.Registry(consulReg),
 	)
 	// 启动微服务
 	microService.Run()

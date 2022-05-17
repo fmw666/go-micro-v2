@@ -3,7 +3,6 @@ package main
 import (
 	"order/config"
 	"order/models"
-	"order/pkg/utils/consul"
 	"order/router"
 	"time"
 
@@ -22,9 +21,6 @@ func main() {
 	// gin Router 路由引擎
 	ginRouter := router.Router()
 
-	// consul 注册件
-	consulReg := consul.ConsulReg
-
 	// 获取一个微服务的实例
 	microService := web.NewService(
 		web.Name(config.ServerSetting.MicroServiceName),
@@ -34,7 +30,6 @@ func main() {
 		web.RegisterInterval(time.Second*20),
 		web.Address(config.ServerSetting.Host+":"+config.ServerSetting.Port),
 		web.Handler(ginRouter),
-		web.Registry(consulReg),
 	)
 	// 启动微服务
 	microService.Run()

@@ -33,8 +33,8 @@ definitions:
 host: localhost:8081
 info:
   contact: {}
-  description: This is a sample server celler server.
-  title: Swagger Example API
+  description: User mciro service.
+  title: User API
   version: "1.0"
 paths:
   /user/login:
