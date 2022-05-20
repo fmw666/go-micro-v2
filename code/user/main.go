@@ -6,7 +6,10 @@ import (
 	"user/models"
 	"user/pkg/utils/consul"
 	"user/router"
+	"user/service"
+	"user/wrappers"
 
+	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/web"
 )
 
@@ -25,8 +28,20 @@ func main() {
 	// 初始化数据库
 	models.Migrate()
 
+	// 初始化 user、order 服务
+	userMicroService := micro.NewService(
+		micro.Name("userService.client"),
+		micro.WrapClient(wrappers.NewUserWrapper),
+	)
+	userService := service.NewUserService("userService", userMicroService.Client())
+	orderMicroService := micro.NewService(
+		micro.Name("orderService.client"),
+		micro.WrapClient(wrappers.NewOrderWrapper),
+	)
+	orderService := service.NewOrderService("orderService", orderMicroService.Client())
+
 	// gin Router 路由引擎
-	ginRouter := router.Router()
+	ginRouter := router.Router(userService, orderService)
 
 	// consul 注册件
 	consulReg := consul.ConsulReg
@@ -42,6 +57,8 @@ func main() {
 		web.Handler(ginRouter),
 		web.Registry(consulReg),
 	)
+	// 服务注册
+	// service.RegisterUserServiceHandler(microService, new(core.UserService))
 	// 启动微服务
 	microService.Run()
 }

@@ -1,0 +1,35 @@
+syntax="proto3";
+package service;
+import "orderModel.proto";
+option go_package ="./;service";
+
+message OrderListRequest{
+    // @inject_tag: json:"offset" form:"offset" uri:"offset"
+    uint32 offset = 1;
+    // @inject_tag: json:"limit" form:"limit" uri:"limit"
+    uint32 limit = 2;
+    // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
+    uint32 user_id = 3;
+}
+
+message OrderCreateRequest{
+    // @inject_tag: json:"name" form:"name" uri:"name"
+    string name = 1;
+    // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
+    uint32 user_id = 2;
+}
+
+// message OrderListResponse{
+//     // @inject_tag: json:"total" form:"total" uri:"total"
+//     // @inject_tag: json:"list" form:"list" uri:"list"
+// }
+
+message OrderDetailResponse{
+  OrderModel OrderDetail=1;
+  uint32 Code=2;
+}
+
+service OrderService{
+  rpc GetOrderList(OrderListRequest) returns(OrderDetailResponse);
+  rpc GetOrderDetail(OrderCreateRequest) returns(OrderDetailResponse);
+}

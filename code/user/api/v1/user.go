@@ -2,6 +2,7 @@ package v1
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -28,13 +29,19 @@ import (
 // @Router /user/register [post]
 func UserRegister(ginCtx *gin.Context) {
 	// 获取 body 内容
-	var req schema.RegisterReq
+	var req service.UserRegisterRequest
 	if err := ginCtx.ShouldBindJSON(&req); err != nil {
 		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
 		return
 	}
-	data, code := service.UserRegister(req.Username, req.Password, req.PasswordConfirm)
-	utils.Response(ginCtx, code, data)
+	// 从 gin.Key 中取出服务实例
+	userService := ginCtx.Keys["userService"].(service.UserService)
+	userResp, err := userService.UserRegister(context.Background(), &req)
+	if err != nil {
+		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_BASE)
+		return
+	}
+	utils.Response(ginCtx, e.SUCCESS, userResp)
 }
 
 // UserLogin 用户登录
@@ -48,13 +55,19 @@ func UserRegister(ginCtx *gin.Context) {
 // @Router /user/login [post]
 func UserLogin(ginCtx *gin.Context) {
 	// 获取 body 内容
-	var req schema.LoginReq
+	var req service.UserLoginRequest
 	if err := ginCtx.ShouldBindJSON(&req); err != nil {
 		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
 		return
 	}
-	data, code := service.UserLogin(req.Username, req.Password)
-	utils.Response(ginCtx, code, data)
+	// 从 gin.Key 中取出服务实例
+	userService := ginCtx.Keys["userService"].(service.UserService)
+	userResp, err := userService.UserLogin(context.Background(), &req)
+	if err != nil {
+		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_BASE)
+		return
+	}
+	utils.Response(ginCtx, e.SUCCESS, userResp)
 }
 
 // UserOrderCreate 用户创建订单
