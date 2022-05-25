@@ -7,6 +7,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// 用于将模型 User 转为 微服务响应结构
 func EncodeUser(item models.User) *service.UserModel {
 	return &service.UserModel{
 		ID:       item.Id,
@@ -17,6 +18,7 @@ func EncodeUser(item models.User) *service.UserModel {
 	}
 }
 
+// 用于将微服务响应结构 转为 schema 结构
 func DecodeUser(item *service.UserModel) *UserResp {
 	return &UserResp{
 		ID:       item.ID,

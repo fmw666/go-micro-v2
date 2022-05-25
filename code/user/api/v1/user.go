@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -42,7 +41,16 @@ func UserRegister(ginCtx *gin.Context) {
 		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_BASE)
 		return
 	}
-	utils.Response(ginCtx, e.SUCCESS, userResp)
+	if userResp.Code != e.SUCCESS {
+		utils.ErrorResponse(ginCtx, e.ErrorCode(userResp.Code))
+		return
+	}
+	token, _ := utils.GenerateToken(uint(userResp.UserDetail.ID))
+	respData := gin.H{
+		"token": token,
+		"user":  schema.DecodeUser(userResp.UserDetail),
+	}
+	utils.OkResponse(ginCtx, respData)
 }
 
 // UserLogin 用户登录
@@ -65,8 +73,11 @@ func UserLogin(ginCtx *gin.Context) {
 	userService := ginCtx.Keys["userService"].(service.UserService)
 	userResp, err := userService.UserLogin(context.Background(), &req)
 	if err != nil {
-		fmt.Println(err)
 		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_BASE)
+		return
+	}
+	if userResp.Code != e.SUCCESS {
+		utils.ErrorResponse(ginCtx, e.ErrorCode(userResp.Code))
 		return
 	}
 	token, _ := utils.GenerateToken(uint(userResp.UserDetail.ID))
@@ -74,7 +85,7 @@ func UserLogin(ginCtx *gin.Context) {
 		"token": token,
 		"user":  schema.DecodeUser(userResp.UserDetail),
 	}
-	utils.Response(ginCtx, e.SUCCESS, respData)
+	utils.OkResponse(ginCtx, respData)
 }
 
 // UserOrderCreate 用户创建订单
