@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -64,10 +65,16 @@ func UserLogin(ginCtx *gin.Context) {
 	userService := ginCtx.Keys["userService"].(service.UserService)
 	userResp, err := userService.UserLogin(context.Background(), &req)
 	if err != nil {
+		fmt.Println(err)
 		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_BASE)
 		return
 	}
-	utils.Response(ginCtx, e.SUCCESS, userResp)
+	token, _ := utils.GenerateToken(uint(userResp.UserDetail.ID))
+	respData := gin.H{
+		"token": token,
+		"user":  schema.DecodeUser(userResp.UserDetail),
+	}
+	utils.Response(ginCtx, e.SUCCESS, respData)
 }
 
 // UserOrderCreate 用户创建订单
