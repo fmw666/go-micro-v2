@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/afex/hystrix-go/hystrix"
-	"github.com/aiscrm/go-micro/v2/client"
+	"github.com/micro/go-micro/v2/client"
 )
 
 type orderWrapper struct {

@@ -6,7 +6,8 @@ require (
 	github.com/aiscrm/go-micro/v2 v2.10.3
 	github.com/go-ini/ini v1.66.4
 	github.com/golang/protobuf v1.5.2
-	github.com/jinzhu/gorm v1.9.16
+	github.com/micro/go-micro/v2 v2.9.1
+	github.com/micro/go-plugins/registry/consul/v2 v2.9.1
 	google.golang.org/protobuf v1.28.0
 	gorm.io/gorm v1.23.4
 )

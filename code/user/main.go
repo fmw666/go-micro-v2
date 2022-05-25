@@ -5,9 +5,9 @@ import (
 	"user/models"
 	"user/service"
 
-	"github.com/aiscrm/go-micro/v2"
-	"github.com/aiscrm/go-micro/v2/registry"
-	"github.com/aiscrm/go-micro/v2/registry/consul"
+	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-plugins/registry/consul/v2"
 )
 
 func main() {
@@ -16,12 +16,12 @@ func main() {
 
 	// consul 注册件
 	consulReg := consul.NewRegistry(
-		registry.Addrs("172.27.128.1:8500"),
+		registry.Addrs(":8500"),
 	)
 	// 获取一个微服务的实例
 	microService := micro.NewService(
 		micro.Name("rpcUserService"),
-		micro.Address("0.0.0.0:8081"),
+		micro.Address("127.0.0.1:8081"),
 		micro.Registry(consulReg),
 	)
 	// 服务注册

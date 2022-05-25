@@ -9,10 +9,10 @@ import (
 	"order/service"
 	"time"
 
-	"github.com/aiscrm/go-micro/v2"
-	"github.com/aiscrm/go-micro/v2/client/selector"
-	"github.com/aiscrm/go-micro/v2/registry"
-	"github.com/aiscrm/go-micro/v2/registry/consul"
+	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/client/selector"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-plugins/registry/consul/v2"
 )
 
 func main() {

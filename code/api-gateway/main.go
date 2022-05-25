@@ -6,10 +6,10 @@ import (
 	"api-gateway/wrappers"
 	"time"
 
-	"github.com/aiscrm/go-micro/v2"
-	"github.com/aiscrm/go-micro/v2/registry"
-	"github.com/aiscrm/go-micro/v2/registry/consul"
-	"github.com/aiscrm/go-micro/v2/web"
+	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/web"
+	"github.com/micro/go-plugins/registry/consul/v2"
 )
 
 // @securityDefinitions.apikey ApiKeyAuth
@@ -22,9 +22,9 @@ func main() {
 	// 初始化 consul 注册件
 	consulReg := consul.NewRegistry(
 		// registry.Addrs("172.27.128.1:8500"),
-		registry.Addrs("192.168.18.157:8500"),
+		registry.Addrs("127.0.0.1:8500"),
 	)
-	
+
 	// 初始化 user 服务
 	userMicroService := micro.NewService(
 		micro.Name("userService.client"),
