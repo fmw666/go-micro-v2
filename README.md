@@ -3,7 +3,7 @@
 <br>
 
 - [x] 服务发现
-- [ ] gRPC + protobuf
+- [ ] RPC + protobuf
 - [ ] API 网关
 
 ### Docker 运行
