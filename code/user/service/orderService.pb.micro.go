@@ -43,7 +43,7 @@ func NewOrderServiceEndpoints() []*api.Endpoint {
 
 type OrderService interface {
 	GetOrderList(ctx context.Context, in *OrderListRequest, opts ...client.CallOption) (*OrderDetailResponse, error)
-	GetOrderDetail(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderDetailResponse, error)
+	CreateOrder(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderDetailResponse, error)
 }
 
 type orderService struct {
@@ -68,8 +68,8 @@ func (c *orderService) GetOrderList(ctx context.Context, in *OrderListRequest, o
 	return out, nil
 }
 
-func (c *orderService) GetOrderDetail(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderDetailResponse, error) {
-	req := c.c.NewRequest(c.name, "OrderService.GetOrderDetail", in)
+func (c *orderService) CreateOrder(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderDetailResponse, error) {
+	req := c.c.NewRequest(c.name, "OrderService.CreateOrder", in)
 	out := new(OrderDetailResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -82,13 +82,13 @@ func (c *orderService) GetOrderDetail(ctx context.Context, in *OrderCreateReques
 
 type OrderServiceHandler interface {
 	GetOrderList(context.Context, *OrderListRequest, *OrderDetailResponse) error
-	GetOrderDetail(context.Context, *OrderCreateRequest, *OrderDetailResponse) error
+	CreateOrder(context.Context, *OrderCreateRequest, *OrderDetailResponse) error
 }
 
 func RegisterOrderServiceHandler(s server.Server, hdlr OrderServiceHandler, opts ...server.HandlerOption) error {
 	type orderService interface {
 		GetOrderList(ctx context.Context, in *OrderListRequest, out *OrderDetailResponse) error
-		GetOrderDetail(ctx context.Context, in *OrderCreateRequest, out *OrderDetailResponse) error
+		CreateOrder(ctx context.Context, in *OrderCreateRequest, out *OrderDetailResponse) error
 	}
 	type OrderService struct {
 		orderService
@@ -105,6 +105,6 @@ func (h *orderServiceHandler) GetOrderList(ctx context.Context, in *OrderListReq
 	return h.OrderServiceHandler.GetOrderList(ctx, in, out)
 }
 
-func (h *orderServiceHandler) GetOrderDetail(ctx context.Context, in *OrderCreateRequest, out *OrderDetailResponse) error {
-	return h.OrderServiceHandler.GetOrderDetail(ctx, in, out)
+func (h *orderServiceHandler) CreateOrder(ctx context.Context, in *OrderCreateRequest, out *OrderDetailResponse) error {
+	return h.OrderServiceHandler.CreateOrder(ctx, in, out)
 }

@@ -2,41 +2,48 @@ package core
 
 import (
 	"context"
-	"fmt"
 	"user/models"
 	"user/pkg/e"
 	"user/schema"
 	"user/service"
 )
 
+// 微服务调用的 UserLogin 方法
 func (*UserService) UserLogin(ctx context.Context, req *service.UserLoginRequest, resp *service.UserDetailResponse) error {
+	// 参数校验
 	if req.Username == "" || req.Password == "" {
 		resp.Code = e.ERROR_PARAM_NOT_CONTENT
 		return nil
 	}
 	var user models.User
+	// 查询用户是否存在
 	if err := models.DB.Where("username=?", req.Username).First(&user).Error; err != nil {
 		resp.Code = e.ERROR_USER_NOT_FOUND
 		return nil
 	}
+	// 校验密码
 	if !user.CheckPassword(req.Password) {
 		resp.Code = e.ERROR_USER_PASSWORD
 		return nil
 	}
+	// 生成响应
 	resp.Code = e.SUCCESS
 	resp.UserDetail = schema.EncodeUser(user)
 	return nil
 }
 
+// 微服务调用的 UserRegister 方法
 func (*UserService) UserRegister(ctx context.Context, req *service.UserRegisterRequest, resp *service.UserDetailResponse) error {
-	// TODO 为什么是 passwordconfirm 而非 password_confirm
-	fmt.Println("UserRegister")
-	fmt.Println(req.Password)
-	fmt.Println(req.PasswordConfirm)
+	// 参数校验
+	if req.Username == "" || req.Password == "" || req.PasswordConfirm == "" {
+		resp.Code = e.ERROR_PARAM_NOT_CONTENT
+		return nil
+	}
 	if req.Password != req.PasswordConfirm {
 		resp.Code = e.ERROR_PASSWORD_NOT_MATCH
 		return nil
 	}
+	// 查询是否存在同名用户
 	var count int64 = 0
 	if err := models.DB.Model(&models.User{}).Where("username=?", req.Username).Count(&count).Error; err != nil {
 		resp.Code = e.ERROR_DB_BASE
@@ -52,10 +59,12 @@ func (*UserService) UserRegister(ctx context.Context, req *service.UserRegisterR
 		resp.Code = e.ERROR_USER_SET_PASSWORD
 		return nil
 	}
+	// 创建用户
 	if err := models.DB.Create(&user).Error; err != nil {
 		resp.Code = e.ERROR_DB_CREATE
 		return nil
 	}
+	// 生成响应
 	resp.Code = e.SUCCESS
 	resp.UserDetail = schema.EncodeUser(user)
 	return nil

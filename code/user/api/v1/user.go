@@ -1,17 +1,12 @@
 package v1
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 	"user/config"
 	"user/models"
 	"user/pkg/e"
 	"user/pkg/utils"
-	"user/pkg/utils/consul"
 	"user/schema"
 	"user/service"
 
@@ -100,31 +95,27 @@ func UserLogin(ginCtx *gin.Context) {
 // @Success 200 {string} json "{"code":0,"data":{}}"
 // @Router /user/orders [post]
 func UserOrderCreate(ginCtx *gin.Context) {
-	var req schema.UserOrderCreateReq
-	err := ginCtx.BindJSON(&req)
-	if err != nil {
+	// 获取 body 内容
+	var req service.OrderCreateRequest
+	if err := ginCtx.ShouldBindJSON(&req); err != nil {
 		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
 		return
 	}
-	// 获取 Order 服务地址
-	hostAddress, err := consul.GetServiceAddr("rpcOrderService")
-	if err != nil || hostAddress == "" {
-		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_NOT_FOUND)
+	// 从 gin.Key 中取出服务实例
+	orderService := ginCtx.Keys["orderService"].(service.OrderService)
+	orderResp, err := orderService.CreateOrder(context.Background(), &req)
+	if err != nil {
+		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_BASE)
 		return
 	}
-	// 获取当前登录用户
-	user := ginCtx.Keys["user"].(models.User)
-	// 调用 Order 服务
-	url := "http://" + hostAddress + "/api/v1/orders"
-	body := bytes.NewBuffer([]byte("{\"name\":\"" + req.Name + "\",\"user_id\":" + strconv.FormatInt(int64(user.Id), 10) + "}"))
-	resp, _ := http.Post(url, "application/json;charset=utf-8", body)
-
-	respData, _ := ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
-	var data any
-	json.Unmarshal(respData, &data)
-
-	ginCtx.JSON(http.StatusOK, data)
+	if orderResp.Code != e.SUCCESS {
+		utils.ErrorResponse(ginCtx, e.ErrorCode(orderResp.Code))
+		return
+	}
+	respData := gin.H{
+		"data": orderResp.OrderDetail,
+	}
+	utils.OkResponse(ginCtx, respData)
 }
 
 // GetUserOrderList 用户订单列表
@@ -140,26 +131,33 @@ func UserOrderCreate(ginCtx *gin.Context) {
 // @Success 200 {string} json "{"code":0,"data":{}}"
 // @Router /user/orders [get]
 func GetUserOrderList(ginCtx *gin.Context) {
-	offset := ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset)
-	limit := ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit)
+	// query 参数解析
+	offset, _ := strconv.Atoi(ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset))
+	limit, _ := strconv.Atoi(ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit))
 
-	// 获取 Order 服务地址
-	hostAddress, err := consul.GetServiceAddr(config.ServiceSetting.OrderServiceName)
-	if err != nil || hostAddress == "" {
-		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_NOT_FOUND)
-		return
-	}
 	// 获取当前登录用户
 	user := ginCtx.Keys["user"].(models.User)
-	// 调用 Order 服务
-	url := "http://" + hostAddress + "/api/v1/orders"
-	url += "?offset=" + offset + "&limit=" + limit + "&user_id=" + strconv.FormatInt(int64(user.Id), 10)
-	resp, _ := http.Get(url)
 
-	respData, _ := ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
-	var data any
-	json.Unmarshal(respData, &data)
+	// 构建 request
+	req := service.OrderListRequest{
+		UserId: user.Id,
+		Offset: uint32(offset),
+		Limit:  uint32(limit),
+	}
 
-	ginCtx.JSON(http.StatusOK, data)
+	// 从 gin.Key 中取出服务实例
+	orderService := ginCtx.Keys["orderService"].(service.OrderService)
+	orderResp, err := orderService.GetOrderList(context.Background(), &req)
+	if err != nil {
+		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_BASE)
+		return
+	}
+	if orderResp.Code != e.SUCCESS {
+		utils.ErrorResponse(ginCtx, e.ErrorCode(orderResp.Code))
+		return
+	}
+	respData := gin.H{
+		"data": orderResp.OrderDetail,
+	}
+	utils.OkResponse(ginCtx, respData)
 }

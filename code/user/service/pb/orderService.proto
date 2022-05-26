@@ -31,5 +31,5 @@ message OrderDetailResponse{
 
 service OrderService{
   rpc GetOrderList(OrderListRequest) returns(OrderDetailResponse);
-  rpc GetOrderDetail(OrderCreateRequest) returns(OrderDetailResponse);
+  rpc CreateOrder(OrderCreateRequest) returns(OrderDetailResponse);
 }

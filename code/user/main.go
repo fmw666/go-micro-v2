@@ -5,17 +5,17 @@ import (
 	"user/config"
 	"user/core"
 	"user/models"
-	"user/pkg/utils/consul"
 	"user/router"
 	"user/service"
 	"user/wrappers"
 
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-plugins/registry/consul/v2"
 )
 
+// 初始化 user、order 服务
 func init_services(consulReg registry.Registry) map[string]any {
-	// 初始化 user、order 服务
 	userMicroService := micro.NewService(
 		micro.Name("userService.client"),
 		micro.WrapClient(wrappers.NewUserWrapper),
@@ -34,6 +34,20 @@ func init_services(consulReg registry.Registry) map[string]any {
 	}
 }
 
+// 初始化 User 微服务
+func init_microservice(consulReg registry.Registry) micro.Service {
+	return micro.NewService(
+		micro.Name(config.ServerSetting.MicroServiceName),
+		micro.Address(config.ServerSetting.Host+":"+"18081"),
+		// micro.Address(config.ServerSetting.Host+":"+config.ServerSetting.Port),
+		micro.Registry(consulReg),
+		// 设置注册服务过期时间
+		micro.RegisterTTL(time.Second*30),
+		// 设置间隔多久再次注册服务
+		micro.RegisterInterval(time.Second*20),
+	)
+}
+
 // @title Swagger Example API
 // @version 1.0
 // @description This is a sample server celler server.
@@ -50,7 +64,7 @@ func main() {
 	models.Migrate()
 
 	// consul 注册件
-	consulReg := consul.ConsulReg
+	consulReg := consul.NewRegistry(registry.Addrs(":8500"))
 
 	// 初始化服务
 	services := init_services(consulReg)
@@ -58,17 +72,8 @@ func main() {
 	// gin Router 路由引擎
 	ginRouter := router.Router(services)
 
-	// 获取一个微服务的实例
-	microService := micro.NewService(
-		micro.Name(config.ServerSetting.MicroServiceName),
-		micro.Address(config.ServerSetting.Host+":"+"18081"),
-		// micro.Address(config.ServerSetting.Host+":"+config.ServerSetting.Port),
-		micro.Registry(consulReg),
-		// 设置注册服务过期时间
-		micro.RegisterTTL(time.Second*30),
-		// 设置间隔多久再次注册服务
-		micro.RegisterInterval(time.Second*20),
-	)
+	// 获取 User 微服务的实例
+	microService := init_microservice(consulReg)
 	// 服务注册
 	service.RegisterUserServiceHandler(microService.Server(), new(core.UserService))
 	// 启动微服务
