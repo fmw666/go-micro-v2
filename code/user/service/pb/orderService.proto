@@ -26,7 +26,7 @@ message OrderCreateRequest{
 
 message OrderDetailResponse{
   OrderModel OrderDetail=1;
-  uint32 Code=2;
+  uint32 code=2;
 }
 
 service OrderService{
