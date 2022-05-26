@@ -7,7 +7,7 @@
 </div>
 
 - [ ] 服务发现
-- [ ] gRPC + protobuf
+- [ ] RPC + protobuf
 - [ ] API 网关
 
 ```s
