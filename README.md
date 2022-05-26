@@ -3,7 +3,7 @@
 <br>
 
 - [x] 服务发现
-- [x] gRPC + protobuf
+- [x] RPC + protobuf
 - [x] API 网关
 
 ```s
