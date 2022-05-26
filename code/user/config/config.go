@@ -29,7 +29,7 @@ func init() {
 	)
 }
 
-func mapTo(section string, v interface{}) {
+func mapTo(section string, v any) {
 	err := cfg.Section(section).MapTo(v)
 	if err != nil {
 		panic(err)

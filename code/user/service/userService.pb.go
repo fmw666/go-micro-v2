@@ -87,7 +87,7 @@ type UserRegisterRequest struct {
 	// @inject_tag: json:"password" form:"password" uri:"password"
 	Password string `protobuf:"bytes,2,opt,name=Password,proto3" json:"Password,omitempty"`
 	// @inject_tag: json:"password_confirm" form:"password_confirm" uri:"password_confirm"
-	PasswordConfirm string `protobuf:"bytes,3,opt,name=PasswordConfirm,proto3" json:"PasswordConfirm,omitempty"`
+	PasswordConfirm string `protobuf:"bytes,3,opt,name=PasswordConfirm,proto3" json:"Password_Confirm,omitempty"`
 }
 
 func (x *UserRegisterRequest) Reset() {
@@ -249,7 +249,7 @@ func file_userService_proto_rawDescGZIP() []byte {
 }
 
 var file_userService_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_userService_proto_goTypes = []interface{}{
+var file_userService_proto_goTypes = []any{
 	(*UserLoginRequest)(nil),    // 0: service.UserLoginRequest
 	(*UserRegisterRequest)(nil), // 1: service.UserRegisterRequest
 	(*UserDetailResponse)(nil),  // 2: service.UserDetailResponse
@@ -275,7 +275,7 @@ func file_userService_proto_init() {
 	}
 	file_userModel_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_userService_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_userService_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*UserLoginRequest); i {
 			case 0:
 				return &v.state
@@ -287,7 +287,7 @@ func file_userService_proto_init() {
 				return nil
 			}
 		}
-		file_userService_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_userService_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*UserRegisterRequest); i {
 			case 0:
 				return &v.state
@@ -299,7 +299,7 @@ func file_userService_proto_init() {
 				return nil
 			}
 		}
-		file_userService_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_userService_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*UserDetailResponse); i {
 			case 0:
 				return &v.state

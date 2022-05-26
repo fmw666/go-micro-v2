@@ -8,7 +8,7 @@ import (
 )
 
 // 接受服务实例，并存到 gin.Key 中
-func InitMiddleware(services map[string]interface{}) gin.HandlerFunc {
+func InitMiddleware(services map[string]any) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		// 将实例存在 gin.Keys 中
 		context.Keys = services

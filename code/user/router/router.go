@@ -11,7 +11,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Router(services map[string]interface{}) *gin.Engine {
+func Router(services map[string]any) *gin.Engine {
 	ginRouter := gin.Default()
 
 	// Swagger 配置

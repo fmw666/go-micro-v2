@@ -14,7 +14,7 @@ import (
 	"github.com/micro/go-micro/v2/registry"
 )
 
-func init_services(consulReg registry.Registry) map[string]interface{} {
+func init_services(consulReg registry.Registry) map[string]any {
 	// 初始化 user、order 服务
 	userMicroService := micro.NewService(
 		micro.Name("userService.client"),
@@ -28,7 +28,7 @@ func init_services(consulReg registry.Registry) map[string]interface{} {
 	)
 	orderService := service.NewOrderService("rpcOrderService", orderMicroService.Client())
 
-	return map[string]interface{}{
+	return map[string]any{
 		"userService":  userService,
 		"orderService": orderService,
 	}

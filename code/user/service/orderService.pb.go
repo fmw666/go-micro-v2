@@ -247,7 +247,7 @@ func file_orderService_proto_rawDescGZIP() []byte {
 }
 
 var file_orderService_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_orderService_proto_goTypes = []interface{}{
+var file_orderService_proto_goTypes = []any{
 	(*OrderListRequest)(nil),    // 0: service.OrderListRequest
 	(*OrderCreateRequest)(nil),  // 1: service.OrderCreateRequest
 	(*OrderDetailResponse)(nil), // 2: service.OrderDetailResponse
@@ -273,7 +273,7 @@ func file_orderService_proto_init() {
 	}
 	file_orderModel_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_orderService_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_orderService_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*OrderListRequest); i {
 			case 0:
 				return &v.state
@@ -285,7 +285,7 @@ func file_orderService_proto_init() {
 				return nil
 			}
 		}
-		file_orderService_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_orderService_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*OrderCreateRequest); i {
 			case 0:
 				return &v.state
@@ -297,7 +297,7 @@ func file_orderService_proto_init() {
 				return nil
 			}
 		}
-		file_orderService_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_orderService_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*OrderDetailResponse); i {
 			case 0:
 				return &v.state

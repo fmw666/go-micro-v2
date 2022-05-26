@@ -28,7 +28,7 @@ func GetOrderList(ginCtx *gin.Context) {
 	userID, _ := strconv.Atoi(ginCtx.DefaultQuery("user_id", "0"))
 
 	var count int64
-	var data interface{}
+	var data any
 	var code e.ErrorCode
 	switch {
 	case userID > 0:

@@ -121,7 +121,7 @@ func UserOrderCreate(ginCtx *gin.Context) {
 
 	respData, _ := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
-	var data interface{}
+	var data any
 	json.Unmarshal(respData, &data)
 
 	ginCtx.JSON(http.StatusOK, data)
@@ -158,7 +158,7 @@ func GetUserOrderList(ginCtx *gin.Context) {
 
 	respData, _ := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
-	var data interface{}
+	var data any
 	json.Unmarshal(respData, &data)
 
 	ginCtx.JSON(http.StatusOK, data)

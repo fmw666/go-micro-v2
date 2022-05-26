@@ -36,27 +36,27 @@ func init() {
 	logger = log.New(F, DefaultPrefix, log.LstdFlags)
 }
 
-func Debug(v ...interface{}) {
+func Debug(v ...any) {
 	setPrefix(DEBUG)
 	logger.Println(v...)
 }
 
-func Info(v ...interface{}) {
+func Info(v ...any) {
 	setPrefix(INFO)
 	logger.Println(v...)
 }
 
-func Warn(v ...interface{}) {
+func Warn(v ...any) {
 	setPrefix(WARNING)
 	logger.Println(v...)
 }
 
-func Error(v ...interface{}) {
+func Error(v ...any) {
 	setPrefix(ERROR)
 	logger.Println(v...)
 }
 
-func Fatal(v ...interface{}) {
+func Fatal(v ...any) {
 	setPrefix(FATAL)
 	logger.Fatalln(v...)
 }

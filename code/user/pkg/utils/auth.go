@@ -33,7 +33,7 @@ func GenerateToken(id uint) (string, error) {
 
 // 验证用户 token
 func ParseToken(token string) (*Claims, error) {
-	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (i interface{}, e error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (i any, e error) {
 		return jwtSecret, nil
 	})
 	if tokenClaims != nil {

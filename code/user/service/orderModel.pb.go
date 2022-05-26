@@ -155,7 +155,7 @@ func file_orderModel_proto_rawDescGZIP() []byte {
 }
 
 var file_orderModel_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_orderModel_proto_goTypes = []interface{}{
+var file_orderModel_proto_goTypes = []any{
 	(*OrderModel)(nil),            // 0: service.OrderModel
 	(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
 }
@@ -176,7 +176,7 @@ func file_orderModel_proto_init() {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_orderModel_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_orderModel_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*OrderModel); i {
 			case 0:
 				return &v.state
