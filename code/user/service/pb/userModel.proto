@@ -4,16 +4,16 @@ option go_package="./;service";
 import public "google/protobuf/timestamp.proto";
 
 message UserModel{
-    // @inject_tag: json:"id"
-    uint32 ID=1;
-    // @inject_tag: json:"username"
-    string Username=2;
-    // @inject_tag: json:"password"
-    string Password=3;
-    // @inject_tag: json:"created_at"
-    google.protobuf.Timestamp CreatedAt=4;
-    // @inject_tag: json:"updated_at"
-    google.protobuf.Timestamp UpdatedAt=5;
-    // @inject_tag: json:"deleted_at"
-    google.protobuf.Timestamp DeletedAt=6;
+  // @inject_tag: json:"id"
+  uint32 ID=1;
+  // @inject_tag: json:"username"
+  string Username=2;
+  // @inject_tag: json:"password"
+  string Password=3;
+  // @inject_tag: json:"created_at"
+  google.protobuf.Timestamp CreatedAt=4;
+  // @inject_tag: json:"updated_at"
+  google.protobuf.Timestamp UpdatedAt=5;
+  // @inject_tag: json:"deleted_at"
+  google.protobuf.Timestamp DeletedAt=6;
 }

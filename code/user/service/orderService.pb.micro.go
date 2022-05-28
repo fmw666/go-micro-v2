@@ -42,8 +42,8 @@ func NewOrderServiceEndpoints() []*api.Endpoint {
 // Client API for OrderService service
 
 type OrderService interface {
-	GetOrderList(ctx context.Context, in *OrderListRequest, opts ...client.CallOption) (*OrderDetailResponse, error)
-	CreateOrder(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderDetailResponse, error)
+	GetOrderList(ctx context.Context, in *OrderListRequest, opts ...client.CallOption) (*OrderListResponse, error)
+	CreateOrder(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderCreateResponse, error)
 }
 
 type orderService struct {
@@ -58,9 +58,9 @@ func NewOrderService(name string, c client.Client) OrderService {
 	}
 }
 
-func (c *orderService) GetOrderList(ctx context.Context, in *OrderListRequest, opts ...client.CallOption) (*OrderDetailResponse, error) {
+func (c *orderService) GetOrderList(ctx context.Context, in *OrderListRequest, opts ...client.CallOption) (*OrderListResponse, error) {
 	req := c.c.NewRequest(c.name, "OrderService.GetOrderList", in)
-	out := new(OrderDetailResponse)
+	out := new(OrderListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -68,9 +68,9 @@ func (c *orderService) GetOrderList(ctx context.Context, in *OrderListRequest, o
 	return out, nil
 }
 
-func (c *orderService) CreateOrder(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderDetailResponse, error) {
+func (c *orderService) CreateOrder(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderCreateResponse, error) {
 	req := c.c.NewRequest(c.name, "OrderService.CreateOrder", in)
-	out := new(OrderDetailResponse)
+	out := new(OrderCreateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -81,14 +81,14 @@ func (c *orderService) CreateOrder(ctx context.Context, in *OrderCreateRequest, 
 // Server API for OrderService service
 
 type OrderServiceHandler interface {
-	GetOrderList(context.Context, *OrderListRequest, *OrderDetailResponse) error
-	CreateOrder(context.Context, *OrderCreateRequest, *OrderDetailResponse) error
+	GetOrderList(context.Context, *OrderListRequest, *OrderListResponse) error
+	CreateOrder(context.Context, *OrderCreateRequest, *OrderCreateResponse) error
 }
 
 func RegisterOrderServiceHandler(s server.Server, hdlr OrderServiceHandler, opts ...server.HandlerOption) error {
 	type orderService interface {
-		GetOrderList(ctx context.Context, in *OrderListRequest, out *OrderDetailResponse) error
-		CreateOrder(ctx context.Context, in *OrderCreateRequest, out *OrderDetailResponse) error
+		GetOrderList(ctx context.Context, in *OrderListRequest, out *OrderListResponse) error
+		CreateOrder(ctx context.Context, in *OrderCreateRequest, out *OrderCreateResponse) error
 	}
 	type OrderService struct {
 		orderService
@@ -101,10 +101,10 @@ type orderServiceHandler struct {
 	OrderServiceHandler
 }
 
-func (h *orderServiceHandler) GetOrderList(ctx context.Context, in *OrderListRequest, out *OrderDetailResponse) error {
+func (h *orderServiceHandler) GetOrderList(ctx context.Context, in *OrderListRequest, out *OrderListResponse) error {
 	return h.OrderServiceHandler.GetOrderList(ctx, in, out)
 }
 
-func (h *orderServiceHandler) CreateOrder(ctx context.Context, in *OrderCreateRequest, out *OrderDetailResponse) error {
+func (h *orderServiceHandler) CreateOrder(ctx context.Context, in *OrderCreateRequest, out *OrderCreateResponse) error {
 	return h.OrderServiceHandler.CreateOrder(ctx, in, out)
 }

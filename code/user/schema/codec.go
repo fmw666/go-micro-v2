@@ -28,3 +28,12 @@ func DecodeUser(item *service.UserModel) *UserResp {
 		UpdatedAt: item.UpdatedAt.AsTime().Format("2006-01-02 15:04:05"),
 	}
 }
+
+// 用于将微服务响应结构 转为 schema 结构
+func DecodePageInfo(item *service.PageInfo) *PageInfoResp {
+	return &PageInfoResp{
+		Offset: item.Offset,
+		Limit:  item.Limit,
+		Total:  item.Total,
+	}
+}

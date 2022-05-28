@@ -112,9 +112,7 @@ func UserOrderCreate(ginCtx *gin.Context) {
 		utils.ErrorResponse(ginCtx, e.ErrorCode(orderResp.Code))
 		return
 	}
-	respData := gin.H{
-		"data": orderResp.OrderDetail,
-	}
+	respData := orderResp.OrderDetail
 	utils.OkResponse(ginCtx, respData)
 }
 
@@ -156,8 +154,5 @@ func GetUserOrderList(ginCtx *gin.Context) {
 		utils.ErrorResponse(ginCtx, e.ErrorCode(orderResp.Code))
 		return
 	}
-	respData := gin.H{
-		"data": orderResp.OrderDetail,
-	}
-	utils.OkResponse(ginCtx, respData)
+	utils.OkResponse(ginCtx, orderResp.OrderList, *schema.DecodePageInfo(orderResp.PageInfo))
 }

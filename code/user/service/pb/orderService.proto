@@ -1,35 +1,58 @@
 syntax="proto3";
 package service;
-import "orderModel.proto";
 option go_package ="./;service";
+import public "google/protobuf/timestamp.proto";
 
 message OrderListRequest{
-    // @inject_tag: json:"offset" form:"offset" uri:"offset"
-    uint32 offset = 1;
-    // @inject_tag: json:"limit" form:"limit" uri:"limit"
-    uint32 limit = 2;
-    // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
-    uint32 user_id = 3;
+  // @inject_tag: json:"offset" form:"offset" uri:"offset"
+  uint32 offset = 1;
+  // @inject_tag: json:"limit" form:"limit" uri:"limit"
+  uint32 limit = 2;
+  // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
+  uint32 user_id = 3;
 }
 
 message OrderCreateRequest{
-    // @inject_tag: json:"name" form:"name" uri:"name"
-    string name = 1;
-    // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
-    uint32 user_id = 2;
+  // @inject_tag: json:"name" form:"name" uri:"name"
+  string name = 1;
+  // @inject_tag: json:"user_id" form:"user_id" uri:"user_id"
+  uint32 user_id = 2;
 }
 
-// message OrderListResponse{
-//     // @inject_tag: json:"total" form:"total" uri:"total"
-//     // @inject_tag: json:"list" form:"list" uri:"list"
-// }
+message OrderResponse{
+  // @inject_tag: json:"id"
+  uint32 ID=1;
+  // @inject_tag: json:"name"
+  string Name=2;
+  // @inject_tag: json:"user_id"
+  uint32 UserID=3;
+  // @inject_tag: json:"created_at"
+  google.protobuf.Timestamp CreatedAt=4;
+  // @inject_tag: json:"updated_at"
+  google.protobuf.Timestamp UpdatedAt=5;
+}
 
-message OrderDetailResponse{
-  OrderModel OrderDetail=1;
+message PageInfo{
+  // @inject_tag: json:"total"
+  uint32 Total=1;
+  // @inject_tag: json:"offset"
+  uint32 Offset=2;
+  // @inject_tag: json:"limit"
+  uint32 Limit=3;
+}
+
+message OrderListResponse{
+  repeated OrderResponse OrderList=1;
+  PageInfo PageInfo=2;
+  uint32 code=3;
+}
+
+message OrderCreateResponse{
+  OrderResponse OrderDetail=1;
   uint32 code=2;
 }
 
 service OrderService{
-  rpc GetOrderList(OrderListRequest) returns(OrderDetailResponse);
-  rpc CreateOrder(OrderCreateRequest) returns(OrderDetailResponse);
+  rpc GetOrderList(OrderListRequest) returns(OrderListResponse);
+  rpc CreateOrder(OrderCreateRequest) returns(OrderCreateResponse);
 }
