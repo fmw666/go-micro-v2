@@ -37,3 +37,23 @@ func DecodePageInfo(item *service.PageInfo) *PageInfoResp {
 		Total:  item.Total,
 	}
 }
+
+// 用于将微服务响应结构 转为 schema 结构
+func DecodeOrder(item *service.OrderResponse) *OrderResp {
+	return &OrderResp{
+		ID:     item.ID,
+		Name:   item.Name,
+		UserID: item.UserID,
+		// Timestamp 转 Time
+		CreatedAt: item.CreatedAt.AsTime().Format("2006-01-02 15:04:05"),
+		UpdatedAt: item.UpdatedAt.AsTime().Format("2006-01-02 15:04:05"),
+	}
+}
+
+func DecodeOrderList(orders []*service.OrderResponse) []*OrderResp {
+	var list []*OrderResp
+	for _, item := range orders {
+		list = append(list, DecodeOrder(item))
+	}
+	return list
+}

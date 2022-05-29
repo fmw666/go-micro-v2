@@ -14,14 +14,8 @@ import (
 	"github.com/micro/go-plugins/registry/consul/v2"
 )
 
-// 初始化 user、order 服务
+// 初始化 order 服务
 func init_services(consulReg registry.Registry) map[string]any {
-	userMicroService := micro.NewService(
-		micro.Name("userService.client"),
-		micro.WrapClient(wrappers.NewUserWrapper),
-	)
-	userService := service.NewUserService("rpcUserService", userMicroService.Client())
-
 	orderMicroService := micro.NewService(
 		micro.Name("orderService.client"),
 		micro.WrapClient(wrappers.NewOrderWrapper),
@@ -29,12 +23,11 @@ func init_services(consulReg registry.Registry) map[string]any {
 	orderService := service.NewOrderService("rpcOrderService", orderMicroService.Client())
 
 	return map[string]any{
-		"userService":  userService,
 		"orderService": orderService,
 	}
 }
 
-// 初始化 User 微服务
+// 初始化 Order 微服务
 func init_microservice(consulReg registry.Registry) micro.Service {
 	return micro.NewService(
 		micro.Name(config.ServerSetting.MicroServiceName),
@@ -66,10 +59,10 @@ func main() {
 	// gin Router 路由引擎
 	ginRouter := router.Router(services)
 
-	// 获取 User 微服务的实例
+	// 获取 Order 微服务的实例
 	microService := init_microservice(consulReg)
 	// 服务注册
-	service.RegisterUserServiceHandler(microService.Server(), new(core.UserService))
+	service.RegisterOrderServiceHandler(microService.Server(), new(core.OrderService))
 	// 启动微服务
 	go microService.Run()
 

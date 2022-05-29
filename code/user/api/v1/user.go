@@ -101,6 +101,11 @@ func UserOrderCreate(ginCtx *gin.Context) {
 		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
 		return
 	}
+
+	// 获取当前登录用户
+	user := ginCtx.Keys["user"].(models.User)
+	req.UserId = user.Id
+
 	// 从 gin.Key 中取出服务实例
 	orderService := ginCtx.Keys["orderService"].(service.OrderService)
 	orderResp, err := orderService.CreateOrder(context.Background(), &req)
@@ -112,8 +117,7 @@ func UserOrderCreate(ginCtx *gin.Context) {
 		utils.ErrorResponse(ginCtx, e.ErrorCode(orderResp.Code))
 		return
 	}
-	respData := orderResp.OrderDetail
-	utils.OkResponse(ginCtx, respData)
+	utils.OkResponse(ginCtx, schema.DecodeOrder(orderResp.OrderDetail))
 }
 
 // GetUserOrderList 用户订单列表
@@ -154,5 +158,5 @@ func GetUserOrderList(ginCtx *gin.Context) {
 		utils.ErrorResponse(ginCtx, e.ErrorCode(orderResp.Code))
 		return
 	}
-	utils.OkResponse(ginCtx, orderResp.OrderList, *schema.DecodePageInfo(orderResp.PageInfo))
+	utils.OkResponse(ginCtx, schema.DecodeOrderList(orderResp.OrderList), *schema.DecodePageInfo(orderResp.PageInfo))
 }

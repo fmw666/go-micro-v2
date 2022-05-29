@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"order/config"
 	"order/pkg/e"
 	"order/pkg/utils"
@@ -23,26 +24,30 @@ import (
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /orders [get]
 func GetOrderList(ginCtx *gin.Context) {
+	// query 参数解析
 	offset, _ := strconv.Atoi(ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset))
 	limit, _ := strconv.Atoi(ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit))
 	userID, _ := strconv.Atoi(ginCtx.DefaultQuery("user_id", "0"))
 
-	var count int64
-	var data any
-	var code e.ErrorCode
-	switch {
-	case userID > 0:
-		count, data, code = service.GetOrderList(offset, limit, uint32(userID))
-	case userID == 0:
-		count, data, code = service.GetOrderList(offset, limit)
+	// 构建 request
+	req := service.OrderListRequest{
+		UserId: uint32(userID),
+		Offset: uint32(offset),
+		Limit:  uint32(limit),
 	}
 
-	pageInfo := schema.PageInfoResp{
-		Total:  count,
-		Offset: int64(offset),
-		Limit:  int64(limit),
+	// 从 gin.Key 中取出服务实例
+	orderService := ginCtx.Keys["orderService"].(service.OrderService)
+	orderResp, err := orderService.GetOrderList(context.Background(), &req)
+	if err != nil {
+		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_BASE)
+		return
 	}
-	utils.Response(ginCtx, code, data, pageInfo)
+	if orderResp.Code != e.SUCCESS {
+		utils.ErrorResponse(ginCtx, e.ErrorCode(orderResp.Code))
+		return
+	}
+	utils.OkResponse(ginCtx, schema.DecodeOrderList(orderResp.OrderList), *schema.DecodePageInfo(orderResp.PageInfo))
 }
 
 // CreateOrder 创建订单
@@ -55,12 +60,23 @@ func GetOrderList(ginCtx *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /orders [post]
 func CreateOrder(ginCtx *gin.Context) {
-	var req schema.OrderCreateReq
-	err := ginCtx.BindJSON(&req)
-	if err != nil {
+	// 获取 body 内容
+	var req service.OrderCreateRequest
+	if err := ginCtx.ShouldBindJSON(&req); err != nil {
 		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
 		return
 	}
-	data, code := service.CreateOrder(req.Name, req.UserID)
-	utils.Response(ginCtx, code, data)
+	// 从 gin.Key 中取出服务实例
+	orderService := ginCtx.Keys["orderService"].(service.OrderService)
+	orderResp, err := orderService.CreateOrder(context.Background(), &req)
+	if err != nil {
+		utils.ErrorResponse(ginCtx, e.ERROR_SERVICE_BASE)
+		return
+	}
+	if orderResp.Code != e.SUCCESS {
+		utils.ErrorResponse(ginCtx, e.ErrorCode(orderResp.Code))
+		return
+	}
+	respData := schema.DecodeOrder(orderResp.OrderDetail)
+	utils.OkResponse(ginCtx, respData)
 }

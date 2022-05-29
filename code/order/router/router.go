@@ -11,14 +11,14 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Router() *gin.Engine {
+func Router(services map[string]any) *gin.Engine {
 	ginRouter := gin.Default()
 
 	// Swagger 配置
 	ginRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	// 中间件
-	ginRouter.Use(middleware.Cors(), middleware.ErrorMiddleware())
+	ginRouter.Use(middleware.Cors(), middleware.ErrorMiddleware(), middleware.InitMiddleware(services))
 
 	// 路由规则
 	apiv1 := ginRouter.Group("/api/v1")
