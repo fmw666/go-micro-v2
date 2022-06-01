@@ -70,7 +70,7 @@ func basicAuth(auth string, ginCtx *gin.Context, success *bool) {
 	// 认证成功
 	*success = true
 	// 设置用户变量
-	ginCtx.Set("user_id", userResp.Data.ID)
+	ginCtx.Set("user_id", userResp.Data.User.Id)
 }
 
 // JWT token 用户认证
