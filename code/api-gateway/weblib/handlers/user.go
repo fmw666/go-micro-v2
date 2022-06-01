@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"api-gateway/pkg/utils"
 	"api-gateway/service"
 	"context"
 	"net/http"
@@ -16,16 +15,21 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param body body schema.Register true "注册"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Success 200 {string} json "{"code":200,"data":{},"message":""}"
 // @Router /user/register [post]
 func UserRegister(ginCtx *gin.Context) {
-	var userReq service.UserRequest
+	var userReq service.UserRegisterRequest
 	PanicIfUserError(ginCtx.Bind(&userReq))
 	// 从 gin.Key 中取出服务实例
 	userService := ginCtx.Keys["userService"].(service.UserService)
 	userResp, err := userService.UserRegister(context.Background(), &userReq)
 	PanicIfUserError(err)
-	ginCtx.JSON(http.StatusOK, gin.H{"data": userResp})
+
+	ginCtx.JSON(http.StatusOK, gin.H{
+		"code":    userResp.Code,
+		"data":    userResp.Data,
+		"message": userResp.Message,
+	})
 }
 
 // UserLogin 用户登录
@@ -35,22 +39,19 @@ func UserRegister(ginCtx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param body body schema.Login true "登录"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Success 200 {string} json "{"code":200,"data":{},"msg":""}"
 // @Router /user/login [post]
 func UserLogin(ginCtx *gin.Context) {
-	var userReq service.UserRequest
+	var userReq service.UserLoginRequest
 	PanicIfUserError(ginCtx.Bind(&userReq))
 	// 从 gin.Key 中取出服务实例
 	userService := ginCtx.Keys["userService"].(service.UserService)
 	userResp, err := userService.UserLogin(context.Background(), &userReq)
 	PanicIfUserError(err)
-	token, _ := utils.GenerateToken(uint(userResp.UserDetail.ID))
+
 	ginCtx.JSON(http.StatusOK, gin.H{
-		"code": userResp.Code,
-		"msg":  "成功",
-		"data": gin.H{
-			"user":  userResp.UserDetail,
-			"token": token,
-		},
+		"code":    userResp.Code,
+		"data":    userResp.Data,
+		"message": userResp.Message,
 	})
 }

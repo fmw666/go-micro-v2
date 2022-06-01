@@ -11,7 +11,7 @@ type userWrapper struct {
 	client.Client
 }
 
-func (wrapper *userWrapper) Call(ctx context.Context, req client.Request, resp interface{}, opts ...client.CallOption) error {
+func (wrapper *userWrapper) Call(ctx context.Context, req client.Request, resp any, opts ...client.CallOption) error {
 	cmdName := req.Service() + "." + req.Endpoint()
 	config := hystrix.CommandConfig{
 		Timeout:                30000,

@@ -2,72 +2,79 @@ package core
 
 import (
 	"context"
-	"errors"
-	"fmt"
-	"net/http"
 	"user/models"
+	"user/pkg/e"
+	"user/pkg/utils"
 	"user/service"
 )
 
-func BuildUser(item models.User) *service.UserModel {
-	userModel := service.UserModel{
-		ID:        uint32(item.ID.ID),
-		Username:  item.Username,
-		CreatedAt: item.CreatedAt.Unix(),
-		UpdatedAt: item.UpdatedAt.Unix(),
-	}
-	return &userModel
-}
-
-func (*UserService) UserLogin(ctx context.Context, req *service.UserRequest, resp *service.UserDetailResponse) error {
+func (*UserService) UserLogin(ctx context.Context, req *service.UserLoginRequest, resp *service.UserDetailResponse) error {
+	// 参数校验
 	if req.Username == "" || req.Password == "" {
-		// return errors.New("用户名或密码不能为空")
-		resp.Code = http.StatusNoContent
+		resp.Code = e.ERROR_PARAM_NOT_CONTENT
+		resp.Message = e.GetMsg(e.ERROR_PARAM_NOT_CONTENT)
 		return nil
 	}
 	var user models.User
-	resp.Code = 200
-	fmt.Println("User login...")
+	// 查询用户是否存在
 	if err := models.DB.Where("username=?", req.Username).First(&user).Error; err != nil {
-		fmt.Println("User not found...")
-		resp.Code = 400
+		resp.Code = e.ERROR_USER_NOT_FOUND
+		resp.Message = e.GetMsg(e.ERROR_USER_NOT_FOUND)
 		return nil
 	}
+	// 校验密码
 	if !user.CheckPassword(req.Password) {
-		fmt.Println("User password error...")
-		resp.Code = 400
+		resp.Code = e.ERROR_USER_PASSWORD
+		resp.Message = e.GetMsg(e.ERROR_USER_PASSWORD)
 		return nil
 	}
-	resp.UserDetail = BuildUser(user)
-	fmt.Println("User login success...")
+	// 生成响应
+	resp.Code = e.SUCCESS
+	resp.Data.User = buildUser(user)
+	resp.Data.Token, _ = utils.GenerateToken(user.Id)
 	return nil
 }
 
-func (*UserService) UserRegister(ctx context.Context, req *service.UserRequest, resp *service.UserDetailResponse) error {
-	fmt.Println("User register...")
-	fmt.Println(req)
-	// if req.Password != req.PasswordConfirm {
-	// 	err := errors.New("两次密码输入不一致")
-	// 	return err
-	// }
+func (*UserService) UserRegister(ctx context.Context, req *service.UserRegisterRequest, resp *service.UserDetailResponse) error {
+	// 参数校验
+	if req.Username == "" || req.Password == "" || req.PasswordConfirm == "" {
+		resp.Code = e.ERROR_PARAM_NOT_CONTENT
+		resp.Message = e.GetMsg(e.ERROR_PARAM_NOT_CONTENT)
+		return nil
+	}
+	if req.Password != req.PasswordConfirm {
+		resp.Code = e.ERROR_PASSWORD_NOT_MATCH
+		resp.Message = e.GetMsg(e.ERROR_PASSWORD_NOT_MATCH)
+		return nil
+	}
+	// 查询是否存在同名用户
 	var count int64 = 0
 	if err := models.DB.Model(&models.User{}).Where("username=?", req.Username).Count(&count).Error; err != nil {
-		return err
+		resp.Code = e.ERROR_DB_BASE
+		resp.Message = e.GetMsg(e.ERROR_DB_BASE)
+		return nil
 	}
 	if count > 0 {
-		err := errors.New("用户名已存在")
-		return err
+		resp.Code = e.ERROR_USER_EXIST
+		resp.Message = e.GetMsg(e.ERROR_USER_EXIST)
+		return nil
 	}
-	user := models.User{
-		Username: req.Username,
-	}
+	user := models.User{Username: req.Username}
 	// 加密密码
 	if err := user.SetPassword(req.Password); err != nil {
-		return err
+		resp.Code = e.ERROR_USER_SET_PASSWORD
+		resp.Message = e.GetMsg(e.ERROR_USER_SET_PASSWORD)
+		return nil
 	}
+	// 创建用户
 	if err := models.DB.Create(&user).Error; err != nil {
-		return err
+		resp.Code = e.ERROR_DB_BASE
+		resp.Message = e.GetMsg(e.ERROR_DB_BASE)
+		return nil
 	}
-	resp.UserDetail = BuildUser(user)
+	// 生成响应
+	resp.Code = e.SUCCESS
+	resp.Data.User = buildUser(user)
+	resp.Data.Token, _ = utils.GenerateToken(user.Id)
 	return nil
 }

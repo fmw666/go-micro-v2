@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   schema.Login:
     properties:
@@ -5,6 +6,13 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  schema.OrderCreateReq:
+    properties:
+      name:
+        type: string
+      user_id:
+        type: integer
     type: object
   schema.Register:
     properties:
@@ -15,24 +23,60 @@ definitions:
       username:
         type: string
     type: object
+host: localhost:8080
 info:
   contact: {}
+  description: 网关 API 入口.
+  title: Swagger API-Gateway API 入口
+  version: "1.0"
 paths:
   /orders:
     get:
       consumes:
       - application/json
       description: 微服务模块 Order 中提供的获取订单列表服务
+      parameters:
+      - description: 用户 id
+        in: query
+        name: user_id
+        type: integer
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 限制数量
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":"ok"}'
+          description: '{"code":200,"data":{},"msg":""}'
           schema:
             type: string
-      security:
-      - ApiKeyAuth: []
       summary: 获取订单列表
+      tags:
+      - Order 服务
+    post:
+      consumes:
+      - application/json
+      description: 微服务模块 Order 中提供的创建订单服务
+      parameters:
+      - description: 订单
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/schema.OrderCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":""}'
+          schema:
+            type: string
+      summary: 创建订单
       tags:
       - Order 服务
   /user/login:
@@ -51,7 +95,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":"ok"}'
+          description: '{"code":200,"data":{},"msg":""}'
           schema:
             type: string
       summary: 用户登录
@@ -73,7 +117,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":"ok"}'
+          description: '{"code":200,"data":{},"message":""}'
           schema:
             type: string
       summary: 用户注册
@@ -84,8 +128,6 @@ securityDefinitions:
     in: header
     name: Authorization
     type: apiKey
-  OAuth2Password:
-    flow: password
-    tokenUrl: https://example.com/oauth/token
-    type: oauth2
+  BasicAuth:
+    type: basic
 swagger: "2.0"

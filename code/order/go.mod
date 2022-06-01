@@ -5,6 +5,8 @@ go 1.18
 require (
 	github.com/Allenxuxu/mMicro v0.0.0-20200605111140-77d7c5116b4a
 	github.com/go-ini/ini v1.44.0
+	github.com/micro/go-micro/v2 v2.9.1
+	github.com/micro/go-plugins/registry/consul/v2 v2.9.1
 	google.golang.org/protobuf v1.22.0
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/gorm v1.23.4
@@ -79,7 +81,6 @@ require (
 )
 
 require (
-	github.com/aiscrm/go-micro/v2 v2.10.3
 	github.com/golang/protobuf v1.4.0
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect

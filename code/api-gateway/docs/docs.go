@@ -18,11 +18,6 @@ const docTemplate = `{
     "paths": {
         "/orders": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "微服务模块 Order 中提供的获取订单列表服务",
                 "consumes": [
                     "application/json"
@@ -34,9 +29,61 @@ const docTemplate = `{
                     "Order 服务"
                 ],
                 "summary": "获取订单列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户 id",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "偏移量",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "限制数量",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "微服务模块 Order 中提供的创建订单服务",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order 服务"
+                ],
+                "summary": "创建订单",
+                "parameters": [
+                    {
+                        "description": "订单",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.OrderCreateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -70,7 +117,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -104,7 +151,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "description": "{\"code\":200,\"data\":{},\"message\":\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -122,6 +169,17 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "schema.OrderCreateReq": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -146,22 +204,20 @@ const docTemplate = `{
             "name": "Authorization",
             "in": "header"
         },
-        "OAuth2Password": {
-            "type": "oauth2",
-            "flow": "password",
-            "tokenUrl": "https://example.com/oauth/token"
+        "BasicAuth": {
+            "type": "basic"
         }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Version:          "1.0",
+	Host:             "localhost:8080",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Swagger API-Gateway API 入口",
+	Description:      "网关 API 入口.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

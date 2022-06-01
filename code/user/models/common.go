@@ -8,7 +8,7 @@ import (
 
 // 自增 ID 主键
 type ID struct {
-	ID uint32 `json:"id" gorm:"primaryKey"`
+	Id uint32 `json:"id" gorm:"primaryKey"`
 }
 
 // 创建、更新时间

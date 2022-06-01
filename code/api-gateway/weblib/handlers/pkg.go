@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"api-gateway/pkg/logging"
+	"api-gateway/pkg/logger"
 	"errors"
 )
 
@@ -9,7 +9,7 @@ import (
 func PanicIfUserError(err error) {
 	if err != nil {
 		err = errors.New("userService--" + err.Error())
-		logging.Info(err)
+		logger.Info(err)
 		panic(err)
 	}
 }
@@ -17,7 +17,16 @@ func PanicIfUserError(err error) {
 func PanicIfOrderError(err error) {
 	if err != nil {
 		err = errors.New("orderService--" + err.Error())
-		logging.Info(err)
+		logger.Info(err)
+		panic(err)
+	}
+}
+
+// 处理 code
+func HandleCode(code int32, err error) {
+	if err != nil {
+		err = errors.New("userService--" + err.Error())
+		logger.Info(err)
 		panic(err)
 	}
 }

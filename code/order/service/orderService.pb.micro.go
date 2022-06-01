@@ -11,7 +11,7 @@ import (
 
 import (
 	context "context"
-	api "github.com/Allenxuxu/mMicro/api"
+	api "github.com/micro/go-micro/v2/api"
 	client "github.com/micro/go-micro/v2/client"
 	server "github.com/micro/go-micro/v2/server"
 )
@@ -42,8 +42,8 @@ func NewOrderServiceEndpoints() []*api.Endpoint {
 // Client API for OrderService service
 
 type OrderService interface {
-	// rpc GetOrderList() returns(UserDetailResponse);
-	GetOrderDetail(ctx context.Context, in *OrderRequest, opts ...client.CallOption) (*OrderDetailResponse, error)
+	GetOrderList(ctx context.Context, in *OrderListRequest, opts ...client.CallOption) (*OrderListResponse, error)
+	CreateOrder(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderCreateResponse, error)
 }
 
 type orderService struct {
@@ -58,9 +58,19 @@ func NewOrderService(name string, c client.Client) OrderService {
 	}
 }
 
-func (c *orderService) GetOrderDetail(ctx context.Context, in *OrderRequest, opts ...client.CallOption) (*OrderDetailResponse, error) {
-	req := c.c.NewRequest(c.name, "OrderService.GetOrderDetail", in)
-	out := new(OrderDetailResponse)
+func (c *orderService) GetOrderList(ctx context.Context, in *OrderListRequest, opts ...client.CallOption) (*OrderListResponse, error) {
+	req := c.c.NewRequest(c.name, "OrderService.GetOrderList", in)
+	out := new(OrderListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderService) CreateOrder(ctx context.Context, in *OrderCreateRequest, opts ...client.CallOption) (*OrderCreateResponse, error) {
+	req := c.c.NewRequest(c.name, "OrderService.CreateOrder", in)
+	out := new(OrderCreateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -71,13 +81,14 @@ func (c *orderService) GetOrderDetail(ctx context.Context, in *OrderRequest, opt
 // Server API for OrderService service
 
 type OrderServiceHandler interface {
-	// rpc GetOrderList() returns(UserDetailResponse);
-	GetOrderDetail(context.Context, *OrderRequest, *OrderDetailResponse) error
+	GetOrderList(context.Context, *OrderListRequest, *OrderListResponse) error
+	CreateOrder(context.Context, *OrderCreateRequest, *OrderCreateResponse) error
 }
 
 func RegisterOrderServiceHandler(s server.Server, hdlr OrderServiceHandler, opts ...server.HandlerOption) error {
 	type orderService interface {
-		GetOrderDetail(ctx context.Context, in *OrderRequest, out *OrderDetailResponse) error
+		GetOrderList(ctx context.Context, in *OrderListRequest, out *OrderListResponse) error
+		CreateOrder(ctx context.Context, in *OrderCreateRequest, out *OrderCreateResponse) error
 	}
 	type OrderService struct {
 		orderService
@@ -90,6 +101,10 @@ type orderServiceHandler struct {
 	OrderServiceHandler
 }
 
-func (h *orderServiceHandler) GetOrderDetail(ctx context.Context, in *OrderRequest, out *OrderDetailResponse) error {
-	return h.OrderServiceHandler.GetOrderDetail(ctx, in, out)
+func (h *orderServiceHandler) GetOrderList(ctx context.Context, in *OrderListRequest, out *OrderListResponse) error {
+	return h.OrderServiceHandler.GetOrderList(ctx, in, out)
+}
+
+func (h *orderServiceHandler) CreateOrder(ctx context.Context, in *OrderCreateRequest, out *OrderCreateResponse) error {
+	return h.OrderServiceHandler.CreateOrder(ctx, in, out)
 }

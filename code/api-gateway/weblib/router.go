@@ -1,61 +1,59 @@
 package weblib
 
 import (
-	"api-gateway/docs"
 	"api-gateway/weblib/handlers"
 	"api-gateway/weblib/middleware"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func initSwagger() {
-	docs.SwaggerInfo.Title = "API Gateway"
-	docs.SwaggerInfo.Description = "网关 api 总路由"
-	docs.SwaggerInfo.Version = "1.0"
-	// docs.SwaggerInfo.SecurityDefinitions.ApiKeyAuth = &docs.ApiKeyAuth{
-	// 	In:   "header",
-	// 	Name: "Authorization",
-	// 	Type: "apiKey",
-	// }
-	// docs.SwaggerInfo.Host = config.ServerSetting.PrefixUrl
-	docs.SwaggerInfo.BasePath = "/api/v1"
-	// docs.SwaggerInfo.Schemes = []string{"http", "https"}
+// 路由 /api/v1
+func setupPingRouter(router *gin.RouterGroup) {
+	router.GET("ping", func(context *gin.Context) {
+		context.JSON(200, "success")
+	})
 }
 
-func NewRouter(service ...interface{}) *gin.Engine {
+// 路由 /api/v1/user
+func setupUserRouter(router *gin.RouterGroup) {
+	router.POST("/register", handlers.UserRegister)
+	router.POST("/login", handlers.UserLogin)
+	apiOrder := router.Group("/orders")
+	setupUserOrderRouter(apiOrder)
+}
+
+// 路由 /api/v1/user/orders
+func setupUserOrderRouter(router *gin.RouterGroup) {
+	router.Use(middleware.Authorization())
+	router.GET("", handlers.GetOrderList)
+	router.POST("", handlers.CreateOrder)
+}
+
+// 路由 /api/v1/orders
+func setupOrderRouter(router *gin.RouterGroup) {
+	router.GET("", handlers.GetOrderList)
+	router.POST("", handlers.CreateOrder)
+}
+
+func NewRouter(services map[string]any) *gin.Engine {
 	ginRouter := gin.Default()
 
 	// Swagger 配置
-	initSwagger()
 	ginRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	ginRouter.Use(middleware.Cors(), middleware.InitMiddleware(service), middleware.ErrorMiddleware())
-	store := cookie.NewStore([]byte("something-very-secret"))
-	ginRouter.Use(sessions.Sessions("mysession", store))
-	apiv1 := ginRouter.Group("/api/v1")
-	{
-		apiv1.GET("ping", func(context *gin.Context) {
-			context.JSON(200, "success")
-		})
-		// 用户服务
-		apiv1.POST("/user/register", handlers.UserRegister)
-		apiv1.POST("/user/login", handlers.UserLogin)
+	// 中间件
+	ginRouter.Use(middleware.Cors(), middleware.InitMiddleware(services), middleware.ErrorMiddleware())
 
-		// 需要登录保护
-		apiAuthed := apiv1.Group("/")
-		apiAuthed.Use(middleware.JWT())
-		{
-			apiOrder := apiAuthed.Group("/orders")
-			{
-				apiOrder.GET("", handlers.GetOrderList)
-				apiOrder.GET(":id", handlers.GetOrderDetail)
-			}
-		}
-	}
+	// 路由规则
+	apiv1 := ginRouter.Group("/api/v1")
+	setupPingRouter(apiv1)
+	apiUser := apiv1.Group("/user")
+	setupUserRouter(apiUser)
+	// apiOrder := apiv1.Group("/orders")
+	// setupOrderRouter(apiOrder)
+
 	return ginRouter
 }

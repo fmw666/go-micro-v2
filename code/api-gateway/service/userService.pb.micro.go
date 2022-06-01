@@ -42,8 +42,8 @@ func NewUserServiceEndpoints() []*api.Endpoint {
 // Client API for UserService service
 
 type UserService interface {
-	UserLogin(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserDetailResponse, error)
-	UserRegister(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserDetailResponse, error)
+	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...client.CallOption) (*UserDetailResponse, error)
+	UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...client.CallOption) (*UserDetailResponse, error)
 }
 
 type userService struct {
@@ -58,7 +58,7 @@ func NewUserService(name string, c client.Client) UserService {
 	}
 }
 
-func (c *userService) UserLogin(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserDetailResponse, error) {
+func (c *userService) UserLogin(ctx context.Context, in *UserLoginRequest, opts ...client.CallOption) (*UserDetailResponse, error) {
 	req := c.c.NewRequest(c.name, "UserService.UserLogin", in)
 	out := new(UserDetailResponse)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -68,7 +68,7 @@ func (c *userService) UserLogin(ctx context.Context, in *UserRequest, opts ...cl
 	return out, nil
 }
 
-func (c *userService) UserRegister(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserDetailResponse, error) {
+func (c *userService) UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...client.CallOption) (*UserDetailResponse, error) {
 	req := c.c.NewRequest(c.name, "UserService.UserRegister", in)
 	out := new(UserDetailResponse)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -81,14 +81,14 @@ func (c *userService) UserRegister(ctx context.Context, in *UserRequest, opts ..
 // Server API for UserService service
 
 type UserServiceHandler interface {
-	UserLogin(context.Context, *UserRequest, *UserDetailResponse) error
-	UserRegister(context.Context, *UserRequest, *UserDetailResponse) error
+	UserLogin(context.Context, *UserLoginRequest, *UserDetailResponse) error
+	UserRegister(context.Context, *UserRegisterRequest, *UserDetailResponse) error
 }
 
 func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts ...server.HandlerOption) error {
 	type userService interface {
-		UserLogin(ctx context.Context, in *UserRequest, out *UserDetailResponse) error
-		UserRegister(ctx context.Context, in *UserRequest, out *UserDetailResponse) error
+		UserLogin(ctx context.Context, in *UserLoginRequest, out *UserDetailResponse) error
+		UserRegister(ctx context.Context, in *UserRegisterRequest, out *UserDetailResponse) error
 	}
 	type UserService struct {
 		userService
@@ -101,10 +101,10 @@ type userServiceHandler struct {
 	UserServiceHandler
 }
 
-func (h *userServiceHandler) UserLogin(ctx context.Context, in *UserRequest, out *UserDetailResponse) error {
+func (h *userServiceHandler) UserLogin(ctx context.Context, in *UserLoginRequest, out *UserDetailResponse) error {
 	return h.UserServiceHandler.UserLogin(ctx, in, out)
 }
 
-func (h *userServiceHandler) UserRegister(ctx context.Context, in *UserRequest, out *UserDetailResponse) error {
+func (h *userServiceHandler) UserRegister(ctx context.Context, in *UserRegisterRequest, out *UserDetailResponse) error {
 	return h.UserServiceHandler.UserRegister(ctx, in, out)
 }
