@@ -21,12 +21,3 @@ func PanicIfOrderError(err error) {
 		panic(err)
 	}
 }
-
-// 处理 code
-func HandleCode(code int32, err error) {
-	if err != nil {
-		err = errors.New("userService--" + err.Error())
-		logger.Info(err)
-		panic(err)
-	}
-}

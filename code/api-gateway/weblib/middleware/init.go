@@ -21,8 +21,8 @@ func ErrorMiddleware() gin.HandlerFunc {
 		defer func() {
 			if r := recover(); r != nil {
 				context.JSON(200, gin.H{
-					"code": 404,
-					"msg":  fmt.Sprintf("%s", r),
+					"code":    404,
+					"message": fmt.Sprintf("%s", r),
 				})
 				context.Abort()
 			}
