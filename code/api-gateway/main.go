@@ -66,5 +66,6 @@ func main() {
 	)
 
 	// 接收命令行参数
+	microService.Init()
 	microService.Run()
 }

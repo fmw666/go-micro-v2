@@ -14,7 +14,7 @@ import (
 // @Tags User 服务
 // @Accept  json
 // @Produce  json
-// @Param body body schema.Register true "注册"
+// @Param body body service.UserRegisterRequest true "注册"
 // @Success 200 {string} json "{"code":200,"data":{},"message":""}"
 // @Router /user/register [post]
 func UserRegister(ginCtx *gin.Context) {
@@ -38,7 +38,7 @@ func UserRegister(ginCtx *gin.Context) {
 // @Tags User 服务
 // @Accept  json
 // @Produce  json
-// @Param body body schema.Login true "登录"
+// @Param body body service.UserLoginRequest true "登录"
 // @Success 200 {string} json "{"code":200,"data":{},"msg":""}"
 // @Router /user/login [post]
 func UserLogin(ginCtx *gin.Context) {

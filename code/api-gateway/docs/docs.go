@@ -111,7 +111,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schema.Login"
+                            "$ref": "#/definitions/service.UserLoginRequest"
                         }
                     }
                 ],
@@ -145,7 +145,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schema.Register"
+                            "$ref": "#/definitions/service.UserRegisterRequest"
                         }
                     }
                 ],
@@ -161,17 +161,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "schema.Login": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
         "schema.OrderCreateReq": {
             "type": "object",
             "properties": {
@@ -183,16 +172,32 @@ const docTemplate = `{
                 }
             }
         },
-        "schema.Register": {
+        "service.UserLoginRequest": {
             "type": "object",
             "properties": {
                 "password": {
-                    "type": "string"
-                },
-                "password_confirm": {
+                    "description": "@inject_tag: json:\"password\" form:\"password\" uri:\"password\"",
                     "type": "string"
                 },
                 "username": {
+                    "description": "@inject_tag: json:\"username\" form:\"username\" uri:\"username\"",
+                    "type": "string"
+                }
+            }
+        },
+        "service.UserRegisterRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "description": "@inject_tag: json:\"password\" form:\"password\" uri:\"password\"",
+                    "type": "string"
+                },
+                "password_confirm": {
+                    "description": "@inject_tag: json:\"password_confirm\" form:\"password_confirm\" uri:\"password_confirm\"",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "@inject_tag: json:\"username\" form:\"username\" uri:\"username\"",
                     "type": "string"
                 }
             }

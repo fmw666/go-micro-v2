@@ -31,6 +31,7 @@ type RabbitMQ struct {
 	RabbitMQPassWord string
 	RabbitMQHost     string
 	RabbitMQPort     string
+	Url              string
 }
 
 var RabbitMQSetting = &RabbitMQ{}
@@ -54,6 +55,14 @@ func init() {
 		DatabaseSetting.Host,
 		DatabaseSetting.Port,
 		DatabaseSetting.Name,
+	)
+
+	RabbitMQSetting.Url = fmt.Sprintf("%s://%s:%s@%s:%s/",
+		RabbitMQSetting.RabbitMQ,
+		RabbitMQSetting.RabbitMQUser,
+		RabbitMQSetting.RabbitMQPassWord,
+		RabbitMQSetting.RabbitMQHost,
+		RabbitMQSetting.RabbitMQPort,
 	)
 }
 
