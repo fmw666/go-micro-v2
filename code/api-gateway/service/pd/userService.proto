@@ -37,8 +37,11 @@ message UserResponse{
 }
 
 message UserDetailResponse{
+  // @inject_tag: json:"data" form:"data" uri:"data"
   UserResponse data=1;
+  // @inject_tag: json:"code" form:"code" uri:"code"
   uint32 code=2;
+  // @inject_tag: json:"message,omitempty" form:"message" uri:"message"
   string message=3;
 }
 

@@ -7,9 +7,11 @@ import (
 
 func buildOrder(item *models.Order) *service.OrderResponse {
 	orderResp := service.OrderResponse{
-		ID:     item.Id,
-		Name:   item.Name,
-		UserID: item.UserID,
+		Id:        item.Id,
+		Name:      item.Name,
+		UserId:    item.UserID,
+		CreatedAt: item.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt: item.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 	return &orderResp
 }

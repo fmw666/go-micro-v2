@@ -28,8 +28,8 @@ func setupUserRouter(router *gin.RouterGroup) {
 // 路由 /api/v1/user/orders
 func setupUserOrderRouter(router *gin.RouterGroup) {
 	router.Use(middleware.Authorization())
-	router.GET("", handlers.GetOrderList)
-	router.POST("", handlers.CreateOrder)
+	router.GET("", handlers.GetUserOrderList)
+	router.POST("", handlers.UserOrderCreate)
 }
 
 // 路由 /api/v1/orders
@@ -52,8 +52,8 @@ func NewRouter(services map[string]any) *gin.Engine {
 	setupPingRouter(apiv1)
 	apiUser := apiv1.Group("/user")
 	setupUserRouter(apiUser)
-	// apiOrder := apiv1.Group("/orders")
-	// setupOrderRouter(apiOrder)
+	apiOrder := apiv1.Group("/orders")
+	setupOrderRouter(apiOrder)
 
 	return ginRouter
 }

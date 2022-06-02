@@ -20,37 +20,44 @@ message OrderCreateRequest{
 
 message OrderResponse{
   // @inject_tag: json:"id"
-  uint32 ID=1;
+  uint32 id=1;
   // @inject_tag: json:"name"
-  string Name=2;
+  string name=2;
   // @inject_tag: json:"user_id"
-  uint32 UserID=3;
+  uint32 user_id=3;
   // @inject_tag: json:"created_at"
-  string CreatedAt=4;
+  string created_at=4;
   // @inject_tag: json:"updated_at"
-  string UpdatedAt=5;
+  string updated_at=5;
 }
 
 message PageInfo{
   // @inject_tag: json:"total"
-  uint32 Total=1;
+  uint32 total=1;
   // @inject_tag: json:"offset"
-  uint32 Offset=2;
+  uint32 offset=2;
   // @inject_tag: json:"limit"
-  uint32 Limit=3;
+  uint32 limit=3;
 }
 
 message OrderListResponse{
-  repeated OrderResponse Data=1;
-  PageInfo PageInfo=2;
-  uint32 Code=3;
-  string Message=4;
+  // @inject_tag: json:"data"
+  repeated OrderResponse data=1;
+  // @inject_tag: json:"page_info"
+  PageInfo page_info=2;
+  // @inject_tag: json:"code"
+  uint32 code=3;
+  // @inject_tag: json:"message,omitempty"
+  string message=4;
 }
 
 message OrderCreateResponse{
-  OrderResponse Data=1;
-  uint32 Code=2;
-  string Message=3;
+  // @inject_tag: json:"data"
+  OrderResponse data=1;
+  // @inject_tag: json:"code"
+  uint32 code=2;
+  // @inject_tag: json:"message,omitempty"
+  string message=3;
 }
 
 service OrderService{

@@ -35,11 +35,16 @@ go build
 
 ```sh
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install github.com/favadi/protoc-go-inject-tag
 ```
 
 ```s
+# 生成 pd.go 文件
 protoc --proto_path=. --micro_out=../ --go_out=../ userModel.proto
 protoc --proto_path=. --micro_out=../ --go_out=../ userService.proto
+
+# 处理 omitempty 属性
+protoc-go-inject-tag -input="*.pb.go"
 ```
 
 ### 服务运行

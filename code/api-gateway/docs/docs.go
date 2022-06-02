@@ -51,7 +51,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"\"}",
+                        "description": "{\"code\":200,\"data\":{},\"message\":\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -83,7 +83,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"\"}",
+                        "description": "{\"code\":200,\"data\":{},\"message\":\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -117,7 +117,92 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"\"}",
+                        "description": "{\"code\":200,\"data\":{},\"message\":\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/orders": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "User 服务中提供的用户订单列表服务",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User 服务"
+                ],
+                "summary": "用户订单列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":0,\"data\":{}}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "User 服务中提供的用户创建订单服务",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User 服务"
+                ],
+                "summary": "用户创建订单",
+                "parameters": [
+                    {
+                        "description": "订单",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.OrderCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":0,\"data\":{}}",
                         "schema": {
                             "type": "string"
                         }
@@ -168,6 +253,19 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service.OrderCreateRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "@inject_tag: json:\"name\" form:\"name\" uri:\"name\"",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "@inject_tag: json:\"user_id\" form:\"user_id\" uri:\"user_id\"",
                     "type": "integer"
                 }
             }

@@ -7,6 +7,15 @@ definitions:
       user_id:
         type: integer
     type: object
+  service.OrderCreateRequest:
+    properties:
+      name:
+        description: '@inject_tag: json:"name" form:"name" uri:"name"'
+        type: string
+      user_id:
+        description: '@inject_tag: json:"user_id" form:"user_id" uri:"user_id"'
+        type: integer
+    type: object
   service.UserLoginRequest:
     properties:
       password:
@@ -58,7 +67,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":""}'
+          description: '{"code":200,"data":{},"message":""}'
           schema:
             type: string
       summary: 获取订单列表
@@ -79,7 +88,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":""}'
+          description: '{"code":200,"data":{},"message":""}'
           schema:
             type: string
       summary: 创建订单
@@ -101,10 +110,61 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":""}'
+          description: '{"code":200,"data":{},"message":""}'
           schema:
             type: string
       summary: 用户登录
+      tags:
+      - User 服务
+  /user/orders:
+    get:
+      consumes:
+      - application/json
+      description: User 服务中提供的用户订单列表服务
+      parameters:
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"data":{}}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - BasicAuth: []
+      summary: 用户订单列表
+      tags:
+      - User 服务
+    post:
+      consumes:
+      - application/json
+      description: User 服务中提供的用户创建订单服务
+      parameters:
+      - description: 订单
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service.OrderCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"data":{}}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - BasicAuth: []
+      summary: 用户创建订单
       tags:
       - User 服务
   /user/register:
