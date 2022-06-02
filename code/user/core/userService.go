@@ -28,10 +28,14 @@ func (*UserService) UserLogin(ctx context.Context, req *service.UserLoginRequest
 		resp.Message = e.GetMsg(e.ERROR_USER_PASSWORD)
 		return nil
 	}
+	// 获取 token
+	token, _ := utils.GenerateToken(user.Id)
 	// 生成响应
 	resp.Code = e.SUCCESS
-	resp.Data.User = buildUser(user)
-	resp.Data.Token, _ = utils.GenerateToken(user.Id)
+	resp.Data = &service.UserResponse{
+		User:  buildUser(user),
+		Token: token,
+	}
 	return nil
 }
 
@@ -72,9 +76,13 @@ func (*UserService) UserRegister(ctx context.Context, req *service.UserRegisterR
 		resp.Message = e.GetMsg(e.ERROR_DB_BASE)
 		return nil
 	}
+	// 获取 token
+	token, _ := utils.GenerateToken(user.Id)
 	// 生成响应
 	resp.Code = e.SUCCESS
-	resp.Data.User = buildUser(user)
-	resp.Data.Token, _ = utils.GenerateToken(user.Id)
+	resp.Data = &service.UserResponse{
+		User:  buildUser(user),
+		Token: token,
+	}
 	return nil
 }
