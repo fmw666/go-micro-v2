@@ -18,7 +18,7 @@ import (
 // @Param user_id query int false "用户 id"
 // @Param offset query int false "偏移量"
 // @Param limit query int false "限制数量"
-// @Success 200 {string} json "{"code":200,"data":{},"message":""}"
+// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
 // @Router /orders [get]
 func GetOrderList(ginCtx *gin.Context) {
 	// query 参数解析
@@ -48,7 +48,7 @@ func GetOrderList(ginCtx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param order body schema.OrderCreateReq true "订单"
-// @Success 200 {string} json "{"code":200,"data":{},"message":""}"
+// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
 // @Router /orders [post]
 func CreateOrder(ginCtx *gin.Context) {
 	var orderReq service.OrderCreateRequest

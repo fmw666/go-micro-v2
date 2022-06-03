@@ -16,7 +16,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param body body service.UserRegisterRequest true "注册"
-// @Success 200 {string} json "{"code":200,"data":{},"message":""}"
+// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
 // @Router /user/register [post]
 func UserRegister(ginCtx *gin.Context) {
 	var userReq service.UserRegisterRequest
@@ -36,7 +36,7 @@ func UserRegister(ginCtx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param body body service.UserLoginRequest true "登录"
-// @Success 200 {string} json "{"code":200,"data":{},"message":""}"
+// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
 // @Router /user/login [post]
 func UserLogin(ginCtx *gin.Context) {
 	var userReq service.UserLoginRequest
