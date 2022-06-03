@@ -1,6 +1,7 @@
 package weblib
 
 import (
+	_ "api-gateway/docs"
 	"api-gateway/weblib/handlers"
 	"api-gateway/weblib/middleware"
 
