@@ -6,9 +6,10 @@
     <a href="https://github.com/fmw666/microservice-code-sample/tree/master#-%E5%88%86%E6%94%AF%E8%AF%B4%E6%98%8E">返回主分支 ↩</a>
 </div>
 
-- [ ] 服务发现
+- [ ] 服务发现（Consul）
 - [ ] RPC + protobuf
 - [ ] API 网关
+- [ ] 消息队列（RabbitMQ）
 
 ```s
 docker-compose up -d
