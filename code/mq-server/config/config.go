@@ -6,36 +6,6 @@ import (
 	"github.com/go-ini/ini"
 )
 
-type Server struct {
-	RunMode  string
-	HttpPort string
-}
-
-var ServerSetting = &Server{}
-
-type Database struct {
-	Type     string
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Name     string
-	Url      string
-}
-
-var DatabaseSetting = &Database{}
-
-type RabbitMQ struct {
-	RabbitMQ         string
-	RabbitMQUser     string
-	RabbitMQPassWord string
-	RabbitMQHost     string
-	RabbitMQPort     string
-	Url              string
-}
-
-var RabbitMQSetting = &RabbitMQ{}
-
 var cfg *ini.File
 
 func init() {

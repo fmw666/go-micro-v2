@@ -6,18 +6,6 @@ import (
 	"github.com/go-ini/ini"
 )
 
-type Database struct {
-	Type     string
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Name     string
-	Url      string
-}
-
-var DatabaseSetting = &Database{}
-
 var cfg *ini.File
 
 func init() {
@@ -28,6 +16,7 @@ func init() {
 	}
 
 	mapTo("db", DatabaseSetting)
+	mapTo("rabbitmq", RabbitMQSetting)
 
 	DatabaseSetting.Url = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		DatabaseSetting.User,
@@ -35,6 +24,14 @@ func init() {
 		DatabaseSetting.Host,
 		DatabaseSetting.Port,
 		DatabaseSetting.Name,
+	)
+
+	RabbitMQSetting.Url = fmt.Sprintf("%s://%s:%s@%s:%s/",
+		RabbitMQSetting.RabbitMQ,
+		RabbitMQSetting.RabbitMQUser,
+		RabbitMQSetting.RabbitMQPassWord,
+		RabbitMQSetting.RabbitMQHost,
+		RabbitMQSetting.RabbitMQPort,
 	)
 }
 

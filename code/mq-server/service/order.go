@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"mq-server/models"
 )
@@ -12,7 +13,7 @@ func CreateOrder() {
 	if err != nil {
 		panic(err)
 	}
-	q, _ := ch.QueueDeclare("order", true, false, false, false, nil)
+	q, _ := ch.QueueDeclare("order_queue", true, false, false, false, nil)
 	err = ch.Qos(1, 0, false)
 	msgs, err := ch.Consume(q.Name, "", false, false, false, false, nil)
 	if err != nil {
@@ -26,6 +27,7 @@ func CreateOrder() {
 			if err != nil {
 				panic(err)
 			}
+			fmt.Println(d.Body)
 			models.DB.Create(&t)
 			log.Println("[Order] Create Order:", t)
 			_ = d.Ack(false)

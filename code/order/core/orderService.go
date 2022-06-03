@@ -2,9 +2,12 @@ package core
 
 import (
 	"context"
+	"encoding/json"
 	"order/models"
 	"order/pkg/e"
 	"order/service"
+
+	"github.com/streadway/amqp"
 )
 
 // 微服务调用的 GetOrderList 方法
@@ -35,20 +38,26 @@ func (*OrderService) GetOrderList(ctx context.Context, req *service.OrderListReq
 
 // 微服务调用的 CreateOrder 方法
 func (*OrderService) CreateOrder(ctx context.Context, req *service.OrderCreateRequest, resp *service.OrderCreateResponse) error {
-	// 创建订单模型
-	order := &models.Order{
-		Name:   req.Name,
-		UserID: req.UserId,
-	}
-
-	err := models.DB.Create(order).Error
+	// 将信息生产，放到 rabbitmq 队列中
+	ch, err := models.MQ.Channel()
 	if err != nil {
-		resp.Code = e.ERROR_DB_BASE
-		resp.Message = e.GetMsg(e.ERROR_DB_BASE)
+		resp.Code = e.ERROR_MQ_BASE
+		resp.Message = e.GetMsg(e.ERROR_MQ_BASE)
 		return nil
 	}
-
+	q, _ := ch.QueueDeclare("order_queue", true, false, false, false, nil)
+	body, _ := json.Marshal(req)
+	err = ch.Publish("", q.Name, false, false, amqp.Publishing{
+		DeliveryMode: amqp.Persistent,
+		ContentType:  "application/json",
+		Body:         body,
+	})
+	if err != nil {
+		resp.Code = e.ERROR_MQ_PUBLISH
+		resp.Message = e.GetMsg(e.ERROR_MQ_PUBLISH)
+		return nil
+	}
+	// 将创建 order 任务交给 rabbitmq 处理，这里不需要返回创建的 order 信息
 	resp.Code = e.SUCCESS
-	resp.Data = buildOrder(order)
 	return nil
 }

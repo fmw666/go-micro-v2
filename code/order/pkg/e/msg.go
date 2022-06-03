@@ -36,4 +36,8 @@ var MsgMaps = map[ErrorCode]string{
 	ERROR_USER_PASSWORD:      "密码错误",
 	ERROR_USER_SET_PASSWORD:  "设置密码失败",
 	ERROR_PASSWORD_NOT_MATCH: "密码不匹配",
+
+	// MQ 错误 20000 ~ 21000
+	ERROR_MQ_BASE:    "MQ 服务错误",
+	ERROR_MQ_PUBLISH: "MQ 发布消息失败",
 }
