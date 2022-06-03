@@ -2,9 +2,10 @@
 
 <br>
 
-- [x] 服务发现
+- [x] 服务发现（Consul）
 - [x] RPC + protobuf
 - [x] API 网关
+- [x] 消息队列（RabbitMQ）
 
 ```s
 docker-compose up -d

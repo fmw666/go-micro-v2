@@ -1,15 +1,17 @@
 package models
 
 import (
+	"mq-server/config"
+
 	"github.com/streadway/amqp"
 )
 
-var MQ *amqp.Connection
+var MQ = Init_RabbitMQ(config.RabbitMQSetting.Url)
 
-func RabbitMQ(connString string) {
+func Init_RabbitMQ(connString string) *amqp.Connection {
 	conn, err := amqp.Dial(connString)
 	if err != nil {
 		panic(err)
 	}
-	MQ = conn
+	return conn
 }
