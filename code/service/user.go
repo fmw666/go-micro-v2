@@ -5,8 +5,6 @@ import (
 	"app/pkg/e"
 	"app/pkg/utils"
 	"app/schema"
-
-	"github.com/gin-gonic/gin"
 )
 
 func buildUser(user models.User) *schema.UserResp {
@@ -18,20 +16,26 @@ func buildUser(user models.User) *schema.UserResp {
 	}
 }
 
-func UserRegister(username, password, passwordConfirm string) (*schema.UserResp, e.ErrorCode) {
+func UserRegister(username, password, passwordConfirm string) (resp schema.Response) {
 	// 判断密码是否一致
 	if password != passwordConfirm {
-		return nil, e.ERROR_PASSWORD_NOT_MATCH
+		resp.Code = e.ERROR_PASSWORD_NOT_MATCH
+		resp.Message = e.GetMsg(e.ERROR_PASSWORD_NOT_MATCH)
+		return
 	}
 	// 校验用户名是否已经存在
 	var count int64 = 0
 	if err := models.DB.Model(&models.User{}).Where("username = ?", username).Count(&count).Error; err != nil {
 		// 数据库查询错误
-		return nil, e.ERROR_DB_BASE
+		resp.Code = e.ERROR_DB_BASE
+		resp.Message = e.GetMsg(e.ERROR_DB_BASE)
+		return
 	}
 	// 判断用户名是否已经存在
 	if count > 0 {
-		return nil, e.ERROR_USER_EXIST
+		resp.Code = e.ERROR_USER_EXIST
+		resp.Message = e.GetMsg(e.ERROR_USER_EXIST)
+		return
 	}
 	// 创建用户
 	user := models.User{
@@ -39,32 +43,43 @@ func UserRegister(username, password, passwordConfirm string) (*schema.UserResp,
 	}
 	// 加密密码
 	if err := user.SetPassword(password); err != nil {
-		return nil, e.ERROR_USER_SET_PASSWORD
+		resp.Code = e.ERROR_USER_SET_PASSWORD
+		resp.Message = e.GetMsg(e.ERROR_USER_SET_PASSWORD)
+		return
 	}
 	// 插入数据库
 	if err := models.DB.Create(&user).Error; err != nil {
-		return nil, e.ERROR_DB_CREATE
+		resp.Code = e.ERROR_DB_BASE
+		resp.Message = e.GetMsg(e.ERROR_DB_BASE)
+		return
 	}
 	// 返回用户信息
-	return buildUser(user), e.SUCCESS
+	resp.Code = e.SUCCESS
+	resp.Data = buildUser(user)
+	return
 }
 
-func UserLogin(username, password string) (interface{}, e.ErrorCode) {
+func UserLogin(username, password string) (resp schema.Response) {
 	// 判断用户名是否存在
 	var user models.User
 	if err := models.DB.Where("username = ?", username).First(&user).Error; err != nil {
-		return nil, e.ERROR_USER_NOT_FOUND
+		resp.Code = e.ERROR_USER_NOT_FOUND
+		resp.Message = e.GetMsg(e.ERROR_USER_NOT_FOUND)
+		return
 	}
 	// 校验密码
 	if !user.CheckPassword(password) {
-		return nil, e.ERROR_USER_PASSWORD
+		resp.Code = e.ERROR_USER_PASSWORD
+		resp.Message = e.GetMsg(e.ERROR_USER_PASSWORD)
+		return
 	}
 	// 获取 token
 	token, _ := utils.GenerateToken(uint(user.Id))
 
-	data := gin.H{
+	resp.Code = e.SUCCESS
+	resp.Data = map[string]any{
 		"token": token,
 		"user":  buildUser(user),
 	}
-	return data, e.SUCCESS
+	return
 }

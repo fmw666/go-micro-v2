@@ -3,10 +3,9 @@ package v1
 import (
 	"app/config"
 	"app/models"
-	"app/pkg/e"
-	"app/pkg/utils"
 	"app/schema"
 	"app/service"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -19,17 +18,16 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param body body schema.RegisterReq true "注册"
-// @Success 200 {string} json "{"code":0,"data":{}}"
+// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
 // @Router /user/register [post]
 func UserRegister(ginCtx *gin.Context) {
 	// 获取 body 内容
 	var req schema.RegisterReq
 	if err := ginCtx.ShouldBindJSON(&req); err != nil {
-		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
-		return
+		panic(err)
 	}
-	data, code := service.UserRegister(req.Username, req.Password, req.PasswordConfirm)
-	utils.Response(ginCtx, code, data)
+
+	ginCtx.JSON(http.StatusOK, service.UserRegister(req.Username, req.Password, req.PasswordConfirm))
 }
 
 // UserLogin 用户登录
@@ -39,17 +37,16 @@ func UserRegister(ginCtx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param body body schema.LoginReq true "登录"
-// @Success 200 {string} json "{"code":0,"data":{}}"
+// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
 // @Router /user/login [post]
 func UserLogin(ginCtx *gin.Context) {
 	// 获取 body 内容
 	var req schema.LoginReq
 	if err := ginCtx.ShouldBindJSON(&req); err != nil {
-		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
-		return
+		panic(err)
 	}
-	data, code := service.UserLogin(req.Username, req.Password)
-	utils.Response(ginCtx, code, data)
+
+	ginCtx.JSON(http.StatusOK, service.UserLogin(req.Username, req.Password))
 }
 
 // UserOrderCreate 用户创建订单
@@ -61,19 +58,17 @@ func UserLogin(ginCtx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param body body schema.UserOrderCreateReq true "订单"
-// @Success 200 {string} json "{"code":0,"data":{}}"
+// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
 // @Router /user/orders [post]
 func UserOrderCreate(ginCtx *gin.Context) {
 	var req schema.UserOrderCreateReq
 	err := ginCtx.BindJSON(&req)
 	if err != nil {
-		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
-		return
+		panic(err)
 	}
 	// 获取当前登录用户
 	user := ginCtx.Keys["user"].(models.User)
-	data, code := service.CreateOrder(req.Name, user.Id)
-	utils.Response(ginCtx, code, data)
+	ginCtx.JSON(http.StatusOK, service.CreateOrder(req.Name, user.Id))
 }
 
 // GetUserOrderList 用户订单列表
@@ -94,11 +89,5 @@ func GetUserOrderList(ginCtx *gin.Context) {
 
 	// 获取当前登录用户
 	user := ginCtx.Keys["user"].(models.User)
-	count, data, code := service.GetOrderList(offset, limit, user.Id)
-	pageInfo := schema.PageInfoResp{
-		Total:  count,
-		Offset: int64(offset),
-		Limit:  int64(limit),
-	}
-	utils.Response(ginCtx, code, data, pageInfo)
+	ginCtx.JSON(http.StatusOK, service.GetOrderList(uint32(offset), uint32(limit), user.Id))
 }

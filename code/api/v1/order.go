@@ -2,10 +2,9 @@ package v1
 
 import (
 	"app/config"
-	"app/pkg/e"
-	"app/pkg/utils"
 	"app/schema"
 	"app/service"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -27,22 +26,7 @@ func GetOrderList(ginCtx *gin.Context) {
 	limit, _ := strconv.Atoi(ginCtx.DefaultQuery("limit", config.AppSetting.DefaultLimit))
 	userID, _ := strconv.Atoi(ginCtx.DefaultQuery("user_id", "0"))
 
-	var count int64
-	var data interface{}
-	var code e.ErrorCode
-	switch {
-	case userID > 0:
-		count, data, code = service.GetOrderList(offset, limit, uint32(userID))
-	case userID == 0:
-		count, data, code = service.GetOrderList(offset, limit)
-	}
-
-	pageInfo := schema.PageInfoResp{
-		Total:  count,
-		Offset: int64(offset),
-		Limit:  int64(limit),
-	}
-	utils.Response(ginCtx, code, data, pageInfo)
+	ginCtx.JSON(http.StatusOK, service.GetOrderList(uint32(offset), uint32(limit), uint32(userID)))
 }
 
 // CreateOrder 创建订单
@@ -52,15 +36,13 @@ func GetOrderList(ginCtx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param order body schema.OrderCreateReq true "订单"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
 // @Router /orders [post]
 func CreateOrder(ginCtx *gin.Context) {
 	var req schema.OrderCreateReq
-	err := ginCtx.BindJSON(&req)
-	if err != nil {
-		utils.ErrorResponse(ginCtx, e.ERROR_PARAM_INVALID)
-		return
+	if err := ginCtx.BindJSON(&req); err != nil {
+		panic(err)
 	}
-	data, code := service.CreateOrder(req.Name, req.UserID)
-	utils.Response(ginCtx, code, data)
+
+	ginCtx.JSON(http.StatusOK, service.CreateOrder(req.Name, req.UserID))
 }

@@ -83,7 +83,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -117,7 +117,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":0,\"data\":{}}",
+                        "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -202,7 +202,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":0,\"data\":{}}",
+                        "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -236,7 +236,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":0,\"data\":{}}",
+                        "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
                             "type": "string"
                         }

@@ -40,10 +40,9 @@ func Authorization() gin.HandlerFunc {
 			}
 		}
 		// 如果认证失败，则返回鉴权失败
-		var code e.ErrorCode = e.ERROR_AUTH_BASE
 		ginCtx.JSON(http.StatusUnauthorized, gin.H{
-			"code": code,
-			"msg":  e.GetMsg(code),
+			"code":    e.ERROR_AUTH_FAIL,
+			"message": e.GetMsg(e.ERROR_AUTH_FAIL),
 		})
 		ginCtx.Abort()
 	}

@@ -2,6 +2,7 @@ package e
 
 var MsgMaps = map[ErrorCode]string{
 	ERROR_BASE:               "未知错误",
+	ERROR_EXCEPTION:          "系统异常",
 	ERROR_DB_BASE:            "数据库错误",
 	ERROR_DB_CREATE:          "创建数据失败",
 	ERROR_AUTH_BASE:          "鉴权错误",

@@ -12,7 +12,7 @@ func ErrorResponse(ginCtx *gin.Context, code e.ErrorCode) {
 	ginCtx.JSON(http.StatusOK, gin.H{"code": code, "msg": e.GetMsg(code)})
 }
 
-func Response(ginCtx *gin.Context, code e.ErrorCode, data interface{}, pageInfo ...schema.PageInfoResp) {
+func Response(ginCtx *gin.Context, code e.ErrorCode, data interface{}, pageInfo ...schema.PageInfo) {
 	if code != e.SUCCESS {
 		ErrorResponse(ginCtx, code)
 		return

@@ -27,23 +27,33 @@ func buildOrderList(orders []*models.Order) []*schema.OrderResp {
 }
 
 // 获取订单列表
-func GetOrderList(offset, limit int, userID ...uint32) (int64, []*schema.OrderResp, e.ErrorCode) {
+func GetOrderList(offset, limit, userID uint32) (resp schema.Response) {
 	var count int64
 	data := make([]*models.Order, 0)
 	// 查询订单列表
 	orders := models.DB.Model(new(models.Order))
-	if len(userID) > 0 {
-		orders = orders.Where("user_id = ?", userID[0])
+	if userID != 0 {
+		orders = orders.Where("user_id = ?", userID)
 	}
-	err := orders.Count(&count).Offset(offset).Limit(limit).Order("id desc").Find(&data).Error
+	err := orders.Count(&count).Offset(int(offset)).Limit(int(limit)).Order("id desc").Find(&data).Error
 	if err != nil {
-		return 0, nil, e.ERROR_DB_BASE
+		resp.Code = e.ERROR_DB_BASE
+		resp.Message = e.GetMsg(e.ERROR_DB_BASE)
+		return
 	}
-	return count, buildOrderList(data), e.SUCCESS
+	// 生成响应
+	resp.Code = e.SUCCESS
+	resp.Data = buildOrderList(data)
+	resp.PageInfo = &schema.PageInfo{
+		Offset: offset,
+		Limit:  limit,
+		Total:  uint32(count),
+	}
+	return
 }
 
 // 创建订单
-func CreateOrder(name string, userID uint32) (*schema.OrderResp, e.ErrorCode) {
+func CreateOrder(name string, userID uint32) (resp schema.Response) {
 	// 创建订单模型
 	order := &models.Order{
 		Name:   name,
@@ -52,8 +62,12 @@ func CreateOrder(name string, userID uint32) (*schema.OrderResp, e.ErrorCode) {
 
 	err := models.DB.Create(order).Error
 	if err != nil {
-		return nil, e.ERROR_DB_BASE
+		resp.Code = e.ERROR_DB_BASE
+		resp.Message = e.GetMsg(e.ERROR_DB_BASE)
+		return
 	}
 
-	return buildOrder(*order), e.SUCCESS
+	resp.Code = e.SUCCESS
+	resp.Data = buildOrder(*order)
+	return
 }

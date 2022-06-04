@@ -87,7 +87,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":"ok"}'
+          description: '{"code":0,"data":{},"message":""}'
           schema:
             type: string
       summary: 创建订单
@@ -109,7 +109,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":0,"data":{}}'
+          description: '{"code":0,"data":{},"message":""}'
           schema:
             type: string
       summary: 用户登录
@@ -157,7 +157,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":0,"data":{}}'
+          description: '{"code":0,"data":{},"message":""}'
           schema:
             type: string
       security:
@@ -182,7 +182,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":0,"data":{}}'
+          description: '{"code":0,"data":{},"message":""}'
           schema:
             type: string
       summary: 用户注册

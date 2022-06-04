@@ -11,7 +11,8 @@ const (
 // 其他为错误码
 const (
 	// 基础错误码
-	ERROR_BASE = 10000
+	ERROR_BASE      = 10000
+	ERROR_EXCEPTION = 10001
 
 	// 数据库错误 11000-11999
 	ERROR_DB_BASE   = ERROR_BASE + 1000

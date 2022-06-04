@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"app/pkg/e"
 	"fmt"
 	"net/http"
 
@@ -13,8 +14,9 @@ func ErrorMiddleware() gin.HandlerFunc {
 		defer func() {
 			if r := recover(); r != nil {
 				ginCtx.JSON(http.StatusNotFound, gin.H{
-					"code": 404,
-					"msg":  fmt.Sprintf("%s", r),
+					"code":    e.ERROR_EXCEPTION,
+					"message": e.GetMsg(e.ERROR_EXCEPTION),
+					"details": fmt.Sprintf("%s", r),
 				})
 				ginCtx.Abort()
 			}
