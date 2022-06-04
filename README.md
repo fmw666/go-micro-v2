@@ -239,8 +239,8 @@
 | :------ | :------- | :------ | :------ |
 | [主分支](https://github.com/fmw666/microservice-example/tree/master) | - | - | 描述文档 |
 | [单体应用](https://github.com/fmw666/microservice-example/tree/monolithic-app) | 8080 | 8080 | 单体应用代码 |
-| [微服务应用](https://github.com/fmw666/microservice-example/tree/microservice-app) | User web &ensp;服务：8081<br>Order web 服务：8082 | 8081, 8082 | 微服务应用代码 |
-| [微服务应用<br><i>带服务发现</i>](https://github.com/fmw666/microservice-example/tree/microservice-app-with-service-discovery) | User web &ensp;服务：8081<br>Order web 服务：8082<br>服务发现 服务：8500 | 8081, 8082 | 微服务应用代码<br><i>同时启动服务发现</i> |
-| [微服务应用<br><i>带服务发现、RPC</i>](https://github.com/fmw666/microservice-example/tree/microservice-app-with-rpc) | User web &ensp;服务：8081<br>Order web 服务：8082<br>User rpc &ensp;服务：18081<br>Order rpc 服务：18082<br>服务发现 服务：8500 | 8081, 8082 | 微服务应用代码<br><i>同时启动服务发现和 RPC</i> |
-| [微服务应用<br><i>带服务发现、RPC、网关</i>](https://github.com/fmw666/microservice-example/tree/microservice-app-with-gateway) | API 网关服务：8080<br>User &ensp;服务：8081<br>Order 服务：8082<br>服务发现 服务：8500 | 8080 | 微服务应用代码<br><i>同时启动服务发现和 RPC<br>使用网关作为入口</i> |
-| [微服务应用<br><i>带服务发现、RPC、网关、MQ</i>](https://github.com/fmw666/microservice-example/tree/microservice-app-with-mq) | API 网关服务：8080<br>User rpc &ensp;服务：8081<br>Order rpc 服务：8082<br>服务发现 服务：8500<br>消息队列 服务：5672 | 8080 | 微服务应用代码<br><i>同时启动服务发现和 RPC<br>使用网关作为入口<br>使用 RabbitMQ 作为消息队列</i> |
+| [微服务应用](https://github.com/fmw666/microservice-example/tree/microservice-app) | User &ensp;web 服务：8081<br>Order web 服务：8082 | 8081, 8082 | 微服务应用代码 |
+| [微服务应用<br><i>带服务发现</i>](https://github.com/fmw666/microservice-example/tree/microservice-app-with-service-discovery) | User &ensp;web 服务：8081<br>Order web 服务：8082<br>服务发现 服务：8500 | 8081, 8082 | 微服务应用代码<br><i>同时启动服务发现</i> |
+| [微服务应用<br><i>带服务发现、RPC</i>](https://github.com/fmw666/microservice-example/tree/microservice-app-with-rpc) | User &ensp;web 服务：8081<br>Order web 服务：8082<br>User &ensp;rpc 服务：18081<br>Order rpc 服务：18082<br>服务发现 服务：8500 | 8081, 8082 | 微服务应用代码<br><i>同时启动服务发现和 RPC</i> |
+| [微服务应用<br><i>带服务发现、RPC、网关</i>](https://github.com/fmw666/microservice-example/tree/microservice-app-with-gateway) | API 网关服务：8080<br>User &ensp;rpc 服务：8081<br>Order rpc 服务：8082<br>服务发现 服务：8500 | 8080 | 微服务应用代码<br><i>同时启动服务发现和 RPC<br>使用网关作为入口</i> |
+| [微服务应用<br><i>带服务发现、RPC、网关、MQ</i>](https://github.com/fmw666/microservice-example/tree/microservice-app-with-mq) | API 网关服务：8080<br>User &ensp;rpc 服务：8081<br>Order rpc 服务：8082<br>服务发现 服务：8500<br>消息队列 服务：5672 | 8080 | 微服务应用代码<br><i>同时启动服务发现和 RPC<br>使用网关作为入口<br>使用 RabbitMQ 作为消息队列</i> |
