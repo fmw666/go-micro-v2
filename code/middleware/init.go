@@ -16,7 +16,7 @@ func ErrorMiddleware() gin.HandlerFunc {
 				ginCtx.JSON(http.StatusNotFound, gin.H{
 					"code":    e.ERROR_EXCEPTION,
 					"message": e.GetMsg(e.ERROR_EXCEPTION),
-					"details": fmt.Sprintf("%s", r),
+					"detail":  fmt.Sprintf("%s", r),
 				})
 				ginCtx.Abort()
 			}
