@@ -15,10 +15,10 @@ import (
 // @Summary 用户注册
 // @Description User 服务中提供的用户注册服务
 // @Tags User 服务
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
 // @Param body body schema.RegisterReq true "注册"
-// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
+// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
 // @Router /user/register [post]
 func UserRegister(ginCtx *gin.Context) {
 	// 获取 body 内容
@@ -34,10 +34,10 @@ func UserRegister(ginCtx *gin.Context) {
 // @Summary 用户登录
 // @Description User 服务中提供的用户登录服务
 // @Tags User 服务
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
 // @Param body body schema.LoginReq true "登录"
-// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
+// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
 // @Router /user/login [post]
 func UserLogin(ginCtx *gin.Context) {
 	// 获取 body 内容
@@ -55,10 +55,10 @@ func UserLogin(ginCtx *gin.Context) {
 // @Tags User 服务
 // @Security ApiKeyAuth
 // @Security BasicAuth
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
 // @Param body body schema.UserOrderCreateReq true "订单"
-// @Success 200 {string} json "{"code":0,"data":{},"message":""}"
+// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
 // @Router /user/orders [post]
 func UserOrderCreate(ginCtx *gin.Context) {
 	var req schema.UserOrderCreateReq
@@ -68,6 +68,7 @@ func UserOrderCreate(ginCtx *gin.Context) {
 	}
 	// 获取当前登录用户
 	user := ginCtx.Keys["user"].(models.User)
+
 	ginCtx.JSON(http.StatusOK, service.CreateOrder(req.Name, user.Id))
 }
 
@@ -77,11 +78,11 @@ func UserOrderCreate(ginCtx *gin.Context) {
 // @Tags User 服务
 // @Security ApiKeyAuth
 // @Security BasicAuth
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
 // @Param offset query int false "Offset"
 // @Param limit query int false "Limit"
-// @Success 200 {string} json "{"code":0,"data":{}}"
+// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
 // @Router /user/orders [get]
 func GetUserOrderList(ginCtx *gin.Context) {
 	offset, _ := strconv.Atoi(ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset))
@@ -89,5 +90,6 @@ func GetUserOrderList(ginCtx *gin.Context) {
 
 	// 获取当前登录用户
 	user := ginCtx.Keys["user"].(models.User)
+
 	ginCtx.JSON(http.StatusOK, service.GetOrderList(uint32(offset), uint32(limit), user.Id))
 }

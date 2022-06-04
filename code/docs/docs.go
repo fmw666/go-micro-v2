@@ -51,9 +51,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/schema.Response"
                         }
                     }
                 }
@@ -85,7 +85,7 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/schema.Response"
                         }
                     }
                 }
@@ -119,7 +119,7 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/schema.Response"
                         }
                     }
                 }
@@ -162,9 +162,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":0,\"data\":{}}",
+                        "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/schema.Response"
                         }
                     }
                 }
@@ -204,7 +204,7 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/schema.Response"
                         }
                     }
                 }
@@ -238,7 +238,7 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/schema.Response"
                         }
                     }
                 }
@@ -272,6 +272,20 @@ const docTemplate = `{
                 }
             }
         },
+        "schema.PageInfo": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "schema.RegisterReq": {
             "type": "object",
             "required": [
@@ -288,6 +302,23 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "schema.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "any"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "page_info": {
+                    "$ref": "#/definitions/schema.PageInfo"
                 }
             }
         },
@@ -321,8 +352,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Swagger Example API",
-	Description:      "This is a sample server celler server.",
+	Title:            "单体应用 swagger-ui API 文档",
+	Description:      "详情见源码地址：https://github.com/fmw666/microservice-code-sample/tree/monolithic-app.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
