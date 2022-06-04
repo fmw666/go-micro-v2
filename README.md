@@ -239,7 +239,7 @@
 
   | 分支名称 | 应用端口 | API 入口 | 分支描述 |
   | :------ | :------- | :------ | :------ |
-  | [主分支](https://github.com/fmw666/microservice-example/tree/master) | - | - | 描述文档 |
+  | 主分支 | - | - | 描述文档 |
   | [单体应用](https://github.com/fmw666/microservice-example/tree/monolithic-app) | web 服务：8080 | 8080 | 单体应用代码 |
   | [微服务应用](https://github.com/fmw666/microservice-example/tree/microservice-app) | User &ensp;web 服务：8081<br>Order web 服务：8082 | 8081, 8082 | 微服务应用代码 |
   | [微服务应用<br><i>带服务发现</i>](https://github.com/fmw666/microservice-example/tree/microservice-app-with-service-discovery) | User &ensp;web 服务：8081<br>Order web 服务：8082<br>服务发现 服务：8500 | 8081, 8082 | 微服务应用代码<br><i>同时启动服务发现</i> |
