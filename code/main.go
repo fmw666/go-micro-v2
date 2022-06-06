@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/config"
 	"app/models"
 	"app/router"
 )
@@ -19,5 +20,5 @@ import (
 func main() {
 	models.Migrate()
 	ginRouter := router.Router()
-	ginRouter.Run(":8080")
+	ginRouter.Run(config.ServerSetting.Host + ":" + config.ServerSetting.Port)
 }

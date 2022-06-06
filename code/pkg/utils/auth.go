@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"app/config"
 	"encoding/base64"
 	"strings"
 	"time"
@@ -8,7 +9,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-var jwtSecret = []byte("secret")
+var jwtSecret = []byte(config.JwtSetting.Secret)
 
 type Claims struct {
 	Id uint `json:"id"`
@@ -18,12 +19,12 @@ type Claims struct {
 // 签发用户 token
 func GenerateToken(id uint) (string, error) {
 	nowTime := time.Now()
-	expireTime := nowTime.Add(24 * time.Hour)
+	expireTime := nowTime.Add(config.JwtSetting.Expire * time.Minute)
 	claims := Claims{
 		Id: id,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    "mall",
+			Issuer:    config.JwtSetting.Issuer,
 		},
 	}
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -33,7 +34,7 @@ func GenerateToken(id uint) (string, error) {
 
 // 验证用户 token
 func ParseToken(token string) (*Claims, error) {
-	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (i interface{}, e error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (i any, e error) {
 		return jwtSecret, nil
 	})
 	if tokenClaims != nil {

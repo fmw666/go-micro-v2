@@ -1,26 +1,20 @@
 package logger
 
 import (
+	"app/config"
 	"fmt"
 	"log"
 	"os"
 	"time"
 )
 
-var (
-	LogSavePath = "logs/"
-	LogSaveName = "log"
-	LogFileExt  = "log"
-	TimeFormat  = "20060102"
-)
-
 func getLogFilePath() string {
-	return LogSavePath
+	return config.LogSetting.SavePath
 }
 
 func getLogFileFullPath() string {
 	prefixPath := getLogFilePath()
-	suffixPath := fmt.Sprintf("%s%s.%s", LogSaveName, time.Now().Format(TimeFormat), LogFileExt)
+	suffixPath := fmt.Sprintf("%s%s.%s", config.LogSetting.SaveName, time.Now().Format(config.LogSetting.TimeFormat), config.LogSetting.FileExt)
 
 	return fmt.Sprintf("%s%s", prefixPath, suffixPath)
 }

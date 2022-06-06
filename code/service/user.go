@@ -1,6 +1,7 @@
 package service
 
 import (
+	"app/config"
 	"app/models"
 	"app/pkg/e"
 	"app/pkg/utils"
@@ -14,8 +15,8 @@ func buildUser(user models.User, token string) *userSchema.UserDetailWithToken {
 		User: userSchema.UserDetail{
 			ID:        user.Id,
 			Username:  user.Username,
-			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedAt: user.CreatedAt.Format(config.AppSetting.TimeFormat),
+			UpdatedAt: user.UpdatedAt.Format(config.AppSetting.TimeFormat),
 		},
 	}
 }

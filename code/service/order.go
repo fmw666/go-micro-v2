@@ -1,6 +1,7 @@
 package service
 
 import (
+	"app/config"
 	"app/models"
 	"app/pkg/e"
 	"app/schema"
@@ -13,8 +14,8 @@ func buildOrder(order models.Order) orderSchema.OrderDetail {
 		ID:        order.Id,
 		Name:      order.Name,
 		UserID:    order.UserID,
-		CreatedAt: order.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt: order.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedAt: order.CreatedAt.Format(config.AppSetting.TimeFormat),
+		UpdatedAt: order.UpdatedAt.Format(config.AppSetting.TimeFormat),
 	}
 }
 
