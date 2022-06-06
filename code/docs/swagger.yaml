@@ -1,6 +1,6 @@
 basePath: /api/v1
 definitions:
-  schema.LoginReq:
+  schema.Login:
     properties:
       password:
         type: string
@@ -10,12 +10,32 @@ definitions:
     - password
     - username
     type: object
-  schema.OrderCreateReq:
+  schema.OrderCreate:
     properties:
       name:
         type: string
       user_id:
         type: integer
+    type: object
+  schema.OrderDetail:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  schema.OrderList:
+    properties:
+      orders:
+        items:
+          $ref: '#/definitions/schema.OrderDetail'
+        type: array
     type: object
   schema.PageInfo:
     properties:
@@ -26,7 +46,7 @@ definitions:
       total:
         type: integer
     type: object
-  schema.RegisterReq:
+  schema.Register:
     properties:
       password:
         type: string
@@ -47,10 +67,37 @@ definitions:
         type: any
       message:
         type: string
+    type: object
+  schema.ResponseWithPageInfo:
+    properties:
+      code:
+        type: integer
+      data:
+        type: any
+      message:
+        type: string
       page_info:
         $ref: '#/definitions/schema.PageInfo'
     type: object
-  schema.UserOrderCreateReq:
+  schema.UserDetail:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  schema.UserDetailWithToken:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/schema.UserDetail'
+    type: object
+  schema.UserOrderCreate:
     properties:
       name:
         type: string
@@ -88,7 +135,12 @@ paths:
         "200":
           description: '{"code":0,"data":{},"message":""}'
           schema:
-            $ref: '#/definitions/schema.Response'
+            allOf:
+            - $ref: '#/definitions/schema.ResponseWithPageInfo'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.OrderList'
+              type: object
       summary: 获取订单列表
       tags:
       - Order 服务
@@ -102,14 +154,19 @@ paths:
         name: order
         required: true
         schema:
-          $ref: '#/definitions/schema.OrderCreateReq'
+          $ref: '#/definitions/schema.OrderCreate'
       produces:
       - application/json
       responses:
         "200":
           description: '{"code":0,"data":{},"message":""}'
           schema:
-            $ref: '#/definitions/schema.Response'
+            allOf:
+            - $ref: '#/definitions/schema.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.OrderDetail'
+              type: object
       summary: 创建订单
       tags:
       - Order 服务
@@ -124,14 +181,19 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/schema.LoginReq'
+          $ref: '#/definitions/schema.Login'
       produces:
       - application/json
       responses:
         "200":
           description: '{"code":0,"data":{},"message":""}'
           schema:
-            $ref: '#/definitions/schema.Response'
+            allOf:
+            - $ref: '#/definitions/schema.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.UserDetailWithToken'
+              type: object
       summary: 用户登录
       tags:
       - User 服务
@@ -155,7 +217,12 @@ paths:
         "200":
           description: '{"code":0,"data":{},"message":""}'
           schema:
-            $ref: '#/definitions/schema.Response'
+            allOf:
+            - $ref: '#/definitions/schema.ResponseWithPageInfo'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.OrderList'
+              type: object
       security:
       - ApiKeyAuth: []
       - BasicAuth: []
@@ -172,14 +239,19 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/schema.UserOrderCreateReq'
+          $ref: '#/definitions/schema.UserOrderCreate'
       produces:
       - application/json
       responses:
         "200":
           description: '{"code":0,"data":{},"message":""}'
           schema:
-            $ref: '#/definitions/schema.Response'
+            allOf:
+            - $ref: '#/definitions/schema.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.OrderDetail'
+              type: object
       security:
       - ApiKeyAuth: []
       - BasicAuth: []
@@ -197,14 +269,19 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/schema.RegisterReq'
+          $ref: '#/definitions/schema.Register'
       produces:
       - application/json
       responses:
         "200":
           description: '{"code":0,"data":{},"message":""}'
           schema:
-            $ref: '#/definitions/schema.Response'
+            allOf:
+            - $ref: '#/definitions/schema.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/schema.UserDetailWithToken'
+              type: object
       summary: 用户注册
       tags:
       - User 服务

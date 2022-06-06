@@ -2,7 +2,7 @@ package v1
 
 import (
 	"app/config"
-	"app/schema"
+	orderSchema "app/schema/order"
 	"app/service"
 	"net/http"
 	"strconv"
@@ -19,7 +19,7 @@ import (
 // @Param user_id query int false "用户 id"
 // @Param offset query int false "偏移量"
 // @Param limit query int false "限制数量"
-// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
+// @Success 200 {object} schema.ResponseWithPageInfo{data=schema.OrderList} "{"code":0,"data":{},"message":""}"
 // @Router /orders [get]
 func GetOrderList(ginCtx *gin.Context) {
 	offset, _ := strconv.Atoi(ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset))
@@ -35,11 +35,11 @@ func GetOrderList(ginCtx *gin.Context) {
 // @Tags Order 服务
 // @Accept json
 // @Produce json
-// @Param order body schema.OrderCreateReq true "订单"
-// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
+// @Param order body schema.OrderCreate true "订单"
+// @Success 200 {object} schema.Response{data=schema.OrderDetail} "{"code":0,"data":{},"message":""}"
 // @Router /orders [post]
 func CreateOrder(ginCtx *gin.Context) {
-	var req schema.OrderCreateReq
+	var req orderSchema.OrderCreate
 	if err := ginCtx.BindJSON(&req); err != nil {
 		panic(err)
 	}

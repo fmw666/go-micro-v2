@@ -53,7 +53,19 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "$ref": "#/definitions/schema.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.ResponseWithPageInfo"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.OrderList"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -77,7 +89,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schema.OrderCreateReq"
+                            "$ref": "#/definitions/schema.OrderCreate"
                         }
                     }
                 ],
@@ -85,7 +97,19 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "$ref": "#/definitions/schema.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.OrderDetail"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -111,7 +135,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schema.LoginReq"
+                            "$ref": "#/definitions/schema.Login"
                         }
                     }
                 ],
@@ -119,7 +143,19 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "$ref": "#/definitions/schema.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.UserDetailWithToken"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -164,7 +200,19 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "$ref": "#/definitions/schema.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.ResponseWithPageInfo"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.OrderList"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -196,7 +244,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schema.UserOrderCreateReq"
+                            "$ref": "#/definitions/schema.UserOrderCreate"
                         }
                     }
                 ],
@@ -204,7 +252,19 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "$ref": "#/definitions/schema.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.OrderDetail"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -230,7 +290,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schema.RegisterReq"
+                            "$ref": "#/definitions/schema.Register"
                         }
                     }
                 ],
@@ -238,7 +298,19 @@ const docTemplate = `{
                     "200": {
                         "description": "{\"code\":0,\"data\":{},\"message\":\"\"}",
                         "schema": {
-                            "$ref": "#/definitions/schema.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/schema.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/schema.UserDetailWithToken"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -246,7 +318,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "schema.LoginReq": {
+        "schema.Login": {
             "type": "object",
             "required": [
                 "password",
@@ -261,7 +333,7 @@ const docTemplate = `{
                 }
             }
         },
-        "schema.OrderCreateReq": {
+        "schema.OrderCreate": {
             "type": "object",
             "properties": {
                 "name": {
@@ -269,6 +341,37 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "schema.OrderDetail": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "schema.OrderList": {
+            "type": "object",
+            "properties": {
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schema.OrderDetail"
+                    }
                 }
             }
         },
@@ -286,7 +389,7 @@ const docTemplate = `{
                 }
             }
         },
-        "schema.RegisterReq": {
+        "schema.Register": {
             "type": "object",
             "required": [
                 "password",
@@ -316,13 +419,55 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "schema.ResponseWithPageInfo": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "any"
+                },
+                "message": {
+                    "type": "string"
                 },
                 "page_info": {
                     "$ref": "#/definitions/schema.PageInfo"
                 }
             }
         },
-        "schema.UserOrderCreateReq": {
+        "schema.UserDetail": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "schema.UserDetailWithToken": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/schema.UserDetail"
+                }
+            }
+        },
+        "schema.UserOrderCreate": {
             "type": "object",
             "required": [
                 "name"

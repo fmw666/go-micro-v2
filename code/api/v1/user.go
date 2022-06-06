@@ -3,7 +3,7 @@ package v1
 import (
 	"app/config"
 	"app/models"
-	"app/schema"
+	userSchema "app/schema/user"
 	"app/service"
 	"net/http"
 	"strconv"
@@ -17,12 +17,12 @@ import (
 // @Tags User 服务
 // @Accept json
 // @Produce json
-// @Param body body schema.RegisterReq true "注册"
-// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
+// @Param body body schema.Register true "注册"
+// @Success 200 {object} schema.Response{data=schema.UserDetailWithToken} "{"code":0,"data":{},"message":""}"
 // @Router /user/register [post]
 func UserRegister(ginCtx *gin.Context) {
 	// 获取 body 内容
-	var req schema.RegisterReq
+	var req userSchema.Register
 	if err := ginCtx.ShouldBindJSON(&req); err != nil {
 		panic(err)
 	}
@@ -36,12 +36,12 @@ func UserRegister(ginCtx *gin.Context) {
 // @Tags User 服务
 // @Accept json
 // @Produce json
-// @Param body body schema.LoginReq true "登录"
-// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
+// @Param body body schema.Login true "登录"
+// @Success 200 {object} schema.Response{data=schema.UserDetailWithToken} "{"code":0,"data":{},"message":""}"
 // @Router /user/login [post]
 func UserLogin(ginCtx *gin.Context) {
 	// 获取 body 内容
-	var req schema.LoginReq
+	var req userSchema.Login
 	if err := ginCtx.ShouldBindJSON(&req); err != nil {
 		panic(err)
 	}
@@ -57,11 +57,11 @@ func UserLogin(ginCtx *gin.Context) {
 // @Security BasicAuth
 // @Accept json
 // @Produce json
-// @Param body body schema.UserOrderCreateReq true "订单"
-// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
+// @Param body body schema.UserOrderCreate true "订单"
+// @Success 200 {object} schema.Response{data=schema.OrderDetail} "{"code":0,"data":{},"message":""}"
 // @Router /user/orders [post]
 func UserOrderCreate(ginCtx *gin.Context) {
-	var req schema.UserOrderCreateReq
+	var req userSchema.UserOrderCreate
 	err := ginCtx.BindJSON(&req)
 	if err != nil {
 		panic(err)
@@ -82,7 +82,7 @@ func UserOrderCreate(ginCtx *gin.Context) {
 // @Produce json
 // @Param offset query int false "Offset"
 // @Param limit query int false "Limit"
-// @Success 200 {object} schema.Response "{"code":0,"data":{},"message":""}"
+// @Success 200 {object} schema.ResponseWithPageInfo{data=schema.OrderList} "{"code":0,"data":{},"message":""}"
 // @Router /user/orders [get]
 func GetUserOrderList(ginCtx *gin.Context) {
 	offset, _ := strconv.Atoi(ginCtx.DefaultQuery("offset", config.AppSetting.DefaultOffset))

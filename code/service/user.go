@@ -5,14 +5,18 @@ import (
 	"app/pkg/e"
 	"app/pkg/utils"
 	"app/schema"
+	userSchema "app/schema/user"
 )
 
-func buildUser(user models.User) *schema.UserResp {
-	return &schema.UserResp{
-		ID:        user.Id,
-		Username:  user.Username,
-		CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
+func buildUser(user models.User, token string) *userSchema.UserDetailWithToken {
+	return &userSchema.UserDetailWithToken{
+		Token: token,
+		User: userSchema.UserDetail{
+			ID:        user.Id,
+			Username:  user.Username,
+			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
+		},
 	}
 }
 
@@ -53,9 +57,12 @@ func UserRegister(username, password, passwordConfirm string) (resp schema.Respo
 		resp.Message = e.GetMsg(e.ERROR_DB_BASE)
 		return
 	}
+	// 获取 token
+	token, _ := utils.GenerateToken(uint(user.Id))
+
 	// 返回用户信息
 	resp.Code = e.SUCCESS
-	resp.Data = buildUser(user)
+	resp.Data = buildUser(user, token)
 	return
 }
 
@@ -77,9 +84,6 @@ func UserLogin(username, password string) (resp schema.Response) {
 	token, _ := utils.GenerateToken(uint(user.Id))
 
 	resp.Code = e.SUCCESS
-	resp.Data = map[string]any{
-		"token": token,
-		"user":  buildUser(user),
-	}
+	resp.Data = buildUser(user, token)
 	return
 }

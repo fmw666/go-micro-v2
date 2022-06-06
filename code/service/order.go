@@ -4,11 +4,12 @@ import (
 	"app/models"
 	"app/pkg/e"
 	"app/schema"
+	orderSchema "app/schema/order"
 )
 
 // 订单详情
-func buildOrder(order models.Order) *schema.OrderResp {
-	return &schema.OrderResp{
+func buildOrder(order models.Order) orderSchema.OrderDetail {
+	return orderSchema.OrderDetail{
 		ID:        order.Id,
 		Name:      order.Name,
 		UserID:    order.UserID,
@@ -18,18 +19,20 @@ func buildOrder(order models.Order) *schema.OrderResp {
 }
 
 // 订单列表
-func buildOrderList(orders []*models.Order) []*schema.OrderResp {
-	data := make([]*schema.OrderResp, 0)
+func buildOrderList(orders []models.Order) orderSchema.OrderList {
+	data := make([]orderSchema.OrderDetail, 0)
 	for _, order := range orders {
-		data = append(data, buildOrder(*order))
+		data = append(data, buildOrder(order))
 	}
-	return data
+	return orderSchema.OrderList{
+		Orders: data,
+	}
 }
 
 // 获取订单列表
-func GetOrderList(offset, limit, userID uint32) (resp schema.Response) {
+func GetOrderList(offset, limit, userID uint32) (resp schema.ResponseWithPageInfo) {
 	var count int64
-	data := make([]*models.Order, 0)
+	data := make([]models.Order, 0)
 	// 查询订单列表
 	orders := models.DB.Model(new(models.Order))
 	if userID != 0 {
