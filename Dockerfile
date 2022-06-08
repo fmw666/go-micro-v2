@@ -32,3 +32,5 @@ RUN apt-get clean && \
 
 # 设置工作目录
 WORKDIR /usr/src/code
+
+CMD ["go", "run", "."]
