@@ -24,6 +24,9 @@ ENV PATH $GOPATH/bin:$PATH
 
 # 安装 swag
 USER root
+RUN apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/gpg.2F8CB673971B5C9E.key' | gpg --dearmor -o /usr/share/keyrings/go-swagger-go-swagger-archive-keyring.gpg
+RUN apt-get update
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 
 # 清理垃圾
@@ -34,5 +37,4 @@ RUN apt-get clean && \
 
 # 设置工作目录
 WORKDIR /usr/src/code
-# CMD [ "go", "run", "manage.go", "start" ]
-# ENTRYPOINT [ "go", "run", "manage.go", "start" ]
+CMD [ "go", "run", "manage.go", "init", "&&", "go", "run", "manage.go", "start" ]
