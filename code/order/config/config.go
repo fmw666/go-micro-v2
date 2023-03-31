@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/go-ini/ini"
 )
@@ -18,6 +19,32 @@ func init() {
 	mapTo("server", ServerSetting)
 	mapTo("app", AppSetting)
 	mapTo("db", DatabaseSetting)
+	mapTo("consul", ConsulSetting)
+
+	// 从环境变量中读取 consul 配置
+	if os.Getenv("CONSUL_HOST") != "" {
+		ConsulSetting.Host = os.Getenv("CONSUL_HOST")
+	}
+	if os.Getenv("CONSUL_PORT") != "" {
+		ConsulSetting.Port = os.Getenv("CONSUL_PORT")
+	}
+
+	// 从环境变量中读取 db 配置
+	if os.Getenv("MYSQL_HOST") != "" {
+		DatabaseSetting.Host = os.Getenv("MYSQL_HOST")
+	}
+	if os.Getenv("MYSQL_PORT") != "" {
+		DatabaseSetting.Port = os.Getenv("MYSQL_PORT")
+	}
+	if os.Getenv("MYSQL_USERNAME") != "" {
+		DatabaseSetting.User = os.Getenv("MYSQL_USERNAME")
+	}
+	if os.Getenv("MYSQL_PASSWORD") != "" {
+		DatabaseSetting.Password = os.Getenv("MYSQL_PASSWORD")
+	}
+	if os.Getenv("MYSQL_DATABASE") != "" {
+		DatabaseSetting.Name = os.Getenv("MYSQL_DATABASE")
+	}
 
 	DatabaseSetting.Url = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		DatabaseSetting.User,
@@ -28,7 +55,7 @@ func init() {
 	)
 }
 
-func mapTo(section string, v any) {
+func mapTo(section string, v interface{}) {
 	err := cfg.Section(section).MapTo(v)
 	if err != nil {
 		panic(err)

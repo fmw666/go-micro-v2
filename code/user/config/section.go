@@ -4,6 +4,7 @@ package config
 type Server struct {
 	Host             string
 	Port             string
+	RpcPort          string
 	MicroServiceName string
 }
 
@@ -24,6 +25,12 @@ type Database struct {
 	Url      string
 }
 
+// consul 配置
+type Consul struct {
+	Host string
+	Port string
+}
+
 // service 配置
 type Service struct {
 	OrderServiceName string
@@ -32,4 +39,5 @@ type Service struct {
 var ServerSetting = &Server{}
 var AppSetting = &App{}
 var DatabaseSetting = &Database{}
+var ConsulSetting = &Consul{}
 var ServiceSetting = &Service{}
