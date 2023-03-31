@@ -18,7 +18,7 @@ func Router() *gin.Engine {
 	ginRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	// 中间件
-	ginRouter.Use(middleware.Cors(), middleware.ErrorMiddleware())
+	ginRouter.Use(middleware.Logger(), middleware.Cors(), middleware.ErrorMiddleware())
 
 	// 路由规则
 	apiv1 := ginRouter.Group("/api/v1")
