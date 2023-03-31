@@ -3,7 +3,9 @@ package main
 import (
 	"order/config"
 	"order/models"
+	"order/pkg/logger"
 	"order/router"
+
 	"time"
 
 	"github.com/micro/go-micro/v2/web"
@@ -15,6 +17,8 @@ import (
 // @host localhost:8082
 // @BasePath /api/v1
 func main() {
+	logger.Info("order service start...")
+
 	// 初始化数据库
 	models.Migrate()
 

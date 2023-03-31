@@ -4,6 +4,7 @@ import (
 	"time"
 	"user/config"
 	"user/models"
+	"user/pkg/logger"
 	"user/router"
 
 	"github.com/micro/go-micro/v2/web"
@@ -21,6 +22,8 @@ import (
 // @in header
 // @name Authorization
 func main() {
+	logger.Info("user service start...")
+
 	// 初始化数据库
 	models.Migrate()
 
