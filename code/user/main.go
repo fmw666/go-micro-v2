@@ -23,7 +23,7 @@ import (
 // @in header
 // @name Authorization
 func main() {
-	logger.Info("order service start...")
+	logger.Info("user service start...")
 
 	// 初始化数据库
 	models.Migrate()
