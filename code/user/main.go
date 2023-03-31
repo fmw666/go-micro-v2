@@ -5,6 +5,7 @@ import (
 	"user/config"
 	"user/core"
 	"user/models"
+	"user/pkg/logger"
 	"user/router"
 	"user/service"
 	"user/wrappers"
@@ -38,7 +39,7 @@ func init_services(consulReg registry.Registry) map[string]any {
 func init_microservice(consulReg registry.Registry) micro.Service {
 	return micro.NewService(
 		micro.Name(config.ServerSetting.MicroServiceName),
-		micro.Address(config.ServerSetting.Host+":"+"18081"),
+		micro.Address(config.ServerSetting.Host+":"+config.ServerSetting.RpcPort),
 		// micro.Address(config.ServerSetting.Host+":"+config.ServerSetting.Port),
 		micro.Registry(consulReg),
 		// 设置注册服务过期时间
@@ -60,11 +61,13 @@ func init_microservice(consulReg registry.Registry) micro.Service {
 // @in header
 // @name Authorization
 func main() {
+	logger.Info("user service start...")
+
 	// 初始化数据库
 	models.Migrate()
 
 	// consul 注册件
-	consulReg := consul.NewRegistry(registry.Addrs(":8500"))
+	consulReg := consul.NewRegistry(registry.Addrs(config.ConsulSetting.Host + ":" + config.ConsulSetting.Port))
 
 	// 初始化服务
 	services := init_services(consulReg)

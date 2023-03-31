@@ -4,6 +4,7 @@ import (
 	"order/config"
 	"order/core"
 	"order/models"
+	"order/pkg/logger"
 	"order/router"
 	"order/service"
 	"order/wrappers"
@@ -31,7 +32,7 @@ func init_services(consulReg registry.Registry) map[string]any {
 func init_microservice(consulReg registry.Registry) micro.Service {
 	return micro.NewService(
 		micro.Name(config.ServerSetting.MicroServiceName),
-		micro.Address(config.ServerSetting.Host+":"+"18082"),
+		micro.Address(config.ServerSetting.Host+":"+config.ServerSetting.RpcPort),
 		// micro.Address(config.ServerSetting.Host+":"+config.ServerSetting.Port),
 		micro.Registry(consulReg),
 		// 设置注册服务过期时间
@@ -47,11 +48,13 @@ func init_microservice(consulReg registry.Registry) micro.Service {
 // @host localhost:8082
 // @BasePath /api/v1
 func main() {
+	logger.Info("order service start...")
+
 	// 初始化数据库
 	models.Migrate()
 
 	// consul 注册件
-	consulReg := consul.NewRegistry(registry.Addrs(":8500"))
+	consulReg := consul.NewRegistry(registry.Addrs(config.ConsulSetting.Host + ":" + config.ConsulSetting.Port))
 
 	// 初始化服务
 	services := init_services(consulReg)
