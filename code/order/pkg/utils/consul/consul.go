@@ -3,6 +3,7 @@ package consul
 import (
 	"errors"
 	"fmt"
+	"order/config"
 	"time"
 
 	"github.com/micro/go-micro/v2/client/selector"
@@ -15,8 +16,7 @@ var ConsulReg = initConsulReg()
 
 func initConsulReg() registry.Registry {
 	return consul.NewRegistry(
-		// registry.Addrs("172.27.128.1:8500"),
-		registry.Addrs(":8500"),
+		registry.Addrs(config.ConsulSetting.Host + ":" + config.ConsulSetting.Port),
 	)
 }
 
