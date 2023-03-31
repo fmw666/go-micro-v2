@@ -6,32 +6,45 @@ networks:
 
 # 服务容器配置
 services:
-  golang:                                # 自定义容器名称
+  golang:
     build: ./
-    environment:                         # 设置环境变量
+    environment:
       - TZ=${TZ}
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_USERNAME=${MYSQL_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     privileged: true
-    volumes:                             # 设置挂载目录
-      - ${CODE_PATH_HOST}:/usr/src/code  # 引用 .env 配置中 CODE_PATH_HOST 变量，将宿主机上代码存放的目录挂载到容器中 /usr/src/code 目录
-    stdin_open: true                     # 打开标准输入，可以接受外部输入
+    volumes:
+      - ${CODE_PATH_HOST}:${CODE_PATH_CONTAINER}
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+    depends_on:
+      - mysql
+    dns:
+      - 114.114.114.114
+      - 8.8.8.8
+    stdin_open: true
     tty: true
     networks:
       - backend
-    restart: always                      # 指定容器退出后的重启策略为始终重启
+    restart: always
 
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0.23
     environment:
       - TZ=${TZ}
-      - MYSQL_USER=${MYSQL_USERNAME}                  # 设置 Mysql 用户名称
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}              # 设置 Mysql 用户密码
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}    # 设置 Mysql root 用户密码
-      - MYSQL_DATABASE=${MYSQL_DATABASE}              # 设置 Mysql 数据库名称
+      - MYSQL_USER=${MYSQL_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     privileged: true
     volumes:
-      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql        # 引用 .env 配置中 DATA_PATH_HOST 变量，将宿主机上存放 Mysql 数据的目录挂载到容器中 /var/lib/mysql 目录
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
     ports:
-      - "${MYSQL_PORT}:3306"                          # 设置容器3306端口映射指定宿主机端口
+      - "${MYSQL_HOST_PORT}:${MYSQL_PORT}"
     networks:
       - backend
     restart: always
@@ -41,15 +54,15 @@ services:
     environment:
       - TZ=${TZ}
       - PMA_ARBITRARY=1
-      - MYSQL_USER=${MYSQL_MANAGE_USERNAME}               # 设置连接的 Mysql 服务用户名称
-      - MYSQL_PASSWORD=${MYSQL_MANAGE_PASSWORD}           # 设置连接的 Mysql 服务用户密码
-      - MYSQL_ROOT_PASSWORD=${MYSQL_MANAGE_ROOT_PASSWORD} # 设置连接的 Mysql 服务 root 用户密码
-      - PMA_HOST=${MYSQL_MANAGE_CONNECT_HOST}             # 设置连接的 Mysql 服务 host，可以是 Mysql 服务容器的名称，也可以是 Mysql 服务容器的 ip 地址
-      - PMA_PORT=${MYSQL_MANAGE_CONNECT_PORT}             # 设置连接的 Mysql 服务端口号
+      - MYSQL_USER=${MYSQL_MANAGE_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_MANAGE_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_MANAGE_ROOT_PASSWORD}
+      - PMA_HOST=${MYSQL_MANAGE_CONNECT_HOST}
+      - PMA_PORT=${MYSQL_MANAGE_CONNECT_PORT}
     ports:
-      - "${MYSQL_MANAGE_PORT}:80"                         # 设置容器80端口映射指定宿主机端口，用于宿主机访问可视化web
-    depends_on:                                           # 依赖容器
-      - mysql                                             # 在 Mysql 服务容器启动后启动
+      - "${MYSQL_MANAGE_HOST_PORT}:80"
+    depends_on:
+      - mysql
     networks:
       - backend
     restart: always
