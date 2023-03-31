@@ -3,6 +3,7 @@ package main
 import (
 	"order/config"
 	"order/models"
+	"order/pkg/logger"
 	"order/pkg/utils/consul"
 	"order/router"
 	"time"
@@ -16,6 +17,8 @@ import (
 // @host localhost:8082
 // @BasePath /api/v1
 func main() {
+	logger.Info("order service start...")
+
 	// 初始化数据库
 	models.Migrate()
 
@@ -37,5 +40,7 @@ func main() {
 		web.Registry(consulReg),
 	)
 	// 启动微服务
-	microService.Run()
+	if err := microService.Run(); err != nil {
+		panic(err)
+	}
 }

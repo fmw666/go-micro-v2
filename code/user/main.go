@@ -4,6 +4,7 @@ import (
 	"time"
 	"user/config"
 	"user/models"
+	"user/pkg/logger"
 	"user/pkg/utils/consul"
 	"user/router"
 
@@ -22,6 +23,8 @@ import (
 // @in header
 // @name Authorization
 func main() {
+	logger.Info("order service start...")
+
 	// 初始化数据库
 	models.Migrate()
 
@@ -43,5 +46,7 @@ func main() {
 		web.Registry(consulReg),
 	)
 	// 启动微服务
-	microService.Run()
+	if err := microService.Run(); err != nil {
+		panic(err)
+	}
 }
