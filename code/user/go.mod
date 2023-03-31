@@ -5,11 +5,11 @@ go 1.18
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-ini/ini v1.66.4
-	github.com/golang/protobuf v1.5.2
+	github.com/golang/protobuf v1.5.3
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.4.3
 	github.com/swaggo/swag v1.8.1
-	google.golang.org/protobuf v1.28.0
+	google.golang.org/protobuf v1.30.0
 	gorm.io/gorm v1.23.4
 )
 
@@ -61,6 +61,8 @@ require (
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/micro/cli/v2 v2.1.2 // indirect
+	github.com/micro/micro/v2 v2.5.1-0.20200418121137-24e9b206767c // indirect
+	github.com/micro/protoc-gen-micro/v2 v2.3.0 // indirect
 	github.com/miekg/dns v1.1.27 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/hashstructure v1.0.0 // indirect
