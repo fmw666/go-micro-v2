@@ -116,6 +116,12 @@ docker-compose up -d
     $ protoc --proto_path=. --micro_out=../ --go_out=../ userService.proto
     ```
 
++ 处理 omitempty 属性
+
+    ```s
+    protoc-go-inject-tag -input="*.pb.go"
+    ```
+
 ### 项目结构
 
 + 概览
