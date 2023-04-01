@@ -52,11 +52,11 @@ docker-compose up -d
 
 + user 服务：<http://localhost:8081>
     + swagger 文档：<http://localhost:8081/swagger/index.html>
-    + 服务名：`userService`
+    + 服务名：`rpcUserService`
 
 + order 服务：<http://localhost:8082>
     + swagger 文档：<http://localhost:8082/swagger/index.html>
-    + 服务名：`orderService`
+    + 服务名：`rpcOrderService`
 
 + 端口占用
 
@@ -149,6 +149,10 @@ docker-compose up -d
     │  │  ├── config.go                           // 解析配置文件
     │  │  └── section.go                          // 配置文件中的 section 定义为结构体
     │  │
+    │  ├── core/                                  // 服务核心包
+    │  │  ├── orderService.go                     // 对外提供的 order 服务
+    │  │  └── pkg.go                              // 结构定义
+    │  │
     │  ├── docs/                                  // 由 swag 生成的文档
     │  │  └── ...
     │  │
@@ -161,32 +165,45 @@ docker-compose up -d
     │  │  └── logger.go                           // 请求日志中间件
     │  │
     │  │── models/                                // 模型包
-    │  │   ├── common.go                          // 公共模型、字段
-    │  │   ├── init.go                            // 初始化 DB
-    │  │   └── order.go                           // 订单模型
+    │  │  ├── common.go                           // 公共模型、字段
+    │  │  ├── init.go                             // 初始化 DB
+    │  │  └── order.go                            // 订单模型
     │  │
     │  ├── pkg/                                   // 项目通用包
-    │  │   │── e/                                 // 错误处理包
-    │  │   │   │── code.go                        // 错误码
-    │  │   │   └── msg.go                         // 错误消息
-    │  │   │
-    │  │   │── logger/                            // 日志包
-    │  │   │   │── file.go                        // 日志文件
-    │  │   │   └── log.go                         // 日志记录器
-    │  │   │
-    │  │   └── utils/                             // 工具包
-    │  │       │── auth.go                        // 认证工具
-    │  │       └── response.go                    // 响应工具
+    │  │  │── e/                                  // 错误处理包
+    │  │  │   │── code.go                         // 错误码
+    │  │  │   └── msg.go                          // 错误消息
+    │  │  │
+    │  │  │── logger/                             // 日志包
+    │  │  │   │── file.go                         // 日志文件
+    │  │  │   └── log.go                          // 日志记录器
+    │  │  │
+    │  │  └── utils/                              // 工具包
+    │  │      │── auth.go                         // 认证工具
+    │  │      └── response.go                     // 响应工具
     │  │
     │  ├── router/                                // 路由包
-    │  │   └── router.go                          // 路由初始化
+    │  │  └── router.go                           // 路由初始化
     │  │
     │  ├── schema/                                // 请求/响应结构
-    │  │   ├── page.go                            // 分页请求/响应结构
-    │  │   └── user.go                            // user 请求/响应结构
+    │  │  ├── codec.go                            // 微服务请求/响应结构
+    │  │  ├── order.go                            // order 请求/响应结构
+    │  │  └── page.go                             // 分页请求/响应结构
     │  │
     │  ├── service/                               // 服务包
-    │  │   └── order.go                           // 订单服务
+    │  │  ├── pb/                                 // protobuf 文件
+    │  │  │  │── orderModel.proto                 // order 模型
+    │  │  │  │── orderService.proto               // order 服务
+    │  │  │  │── userModel.proto                  // user 模型
+    │  │  │  └── userService.proto                // user 服务
+    │  │  │
+    │  │  │── orderModel.pb.go                    // protoc 生成的 order 模型
+    │  │  │── orderModel.pb.micro.go              // protoc 生成的基于 micro 的 order 模型
+    │  │  │── orderService.pb.go                  // protoc 生成的 order 服务
+    │  │  └── orderService.pb.micro.go            // protoc 生成的基于 micro 的 order 服务
+    │  │
+    │  ├── wrappers/                              // 微服务包装器
+    │  │  └── orderWrapper.go                     // order 服务包装器
     │  │
     │  │── go.mod                                 // go module
     │  └── main.go                                // 入口文件
@@ -202,6 +219,10 @@ docker-compose up -d
     │  │  ├── conf.ini                            // 配置文件
     │  │  ├── config.go                           // 解析配置文件
     │  │  └── section.go                          // 配置文件中的 section 定义为结构体
+    │  │
+    │  ├── core/                                  // 服务核心包
+    │  │  ├── pkg.go                              // 结构定义
+    │  │  └── userService.go                      // 对外提供的 user 服务
     │  │
     │  ├── docs/                                  // 由 swag 生成的文档
     │  │  └── ...
@@ -237,11 +258,30 @@ docker-compose up -d
     │  │   └── router.go                          // 路由初始化
     │  │
     │  ├── schema/                                // 请求/响应结构
-    │  │   ├── page.go                            // 分页请求/响应结构
-    │  │   └── user.go                            // user 请求/响应结构
+    │  │  ├── codec.go                            // 微服务请求/响应结构
+    │  │  ├── order.go                            // order 请求/响应结构
+    │  │  ├── page.go                             // 分页请求/响应结构
+    │  │  └── user.go                             // user 请求/响应结构
     │  │
     │  ├── service/                               // 服务包
-    │  │   └── user.go                            // 用户服务
+    │  │  ├── pb/                                 // protobuf 文件
+    │  │  │  │── orderModel.proto                 // order 模型
+    │  │  │  │── orderService.proto               // order 服务
+    │  │  │  │── userModel.proto                  // user 模型
+    │  │  │  └── userService.proto                // user 服务
+    │  │  │
+    │  │  │── orderModel.pb.go                    // protoc 生成的 order 模型
+    │  │  │── orderModel.pb.micro.go              // protoc 生成的基于 micro 的 order 模型
+    │  │  │── orderService.pb.go                  // protoc 生成的 order 服务
+    │  │  │── orderService.pb.micro.go            // protoc 生成的基于 micro 的 order 服务
+    │  │  │── userModel.pb.go                     // protoc 生成的 user 模型
+    │  │  │── userModel.pb.micro.go               // protoc 生成的基于 micro 的 user 模型
+    │  │  │── userService.pb.go                   // protoc 生成的 user 服务
+    │  │  └── userService.pb.micro.go             // protoc 生成的基于 micro 的 user 服务
+    │  │
+    │  ├── wrappers/                              // 微服务包装器
+    │  │  │── orderWrapper.go                     // order 服务包装器
+    │  │  └── userWrapper.go                      // user 服务包装器
     │  │
     │  │── go.mod                                 // go module
     │  └── main.go                                // 入口文件
