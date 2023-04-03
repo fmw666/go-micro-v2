@@ -1,8 +1,10 @@
 package main
 
 import (
+	"user/config"
 	"user/core"
 	"user/models"
+	"user/pkg/logger"
 	"user/service"
 
 	"github.com/micro/go-micro/v2"
@@ -11,17 +13,19 @@ import (
 )
 
 func main() {
+	logger.Info("user service start...")
+
 	// 初始化数据库
 	models.Migrate()
 
 	// consul 注册件
 	consulReg := consul.NewRegistry(
-		registry.Addrs(":8500"),
+		registry.Addrs(config.ConsulSetting.Host + ":" + config.ConsulSetting.Port),
 	)
 	// 获取一个微服务的实例
 	microService := micro.NewService(
-		micro.Name("rpcUserService"),
-		micro.Address("127.0.0.1:8081"),
+		micro.Name(config.ServerSetting.MicroServiceName),
+		micro.Address(config.ServerSetting.Host+":"+config.ServerSetting.RpcPort),
 		micro.Registry(consulReg),
 	)
 	// 服务注册
