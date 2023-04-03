@@ -54,14 +54,13 @@ docker-compose up -d
 ### 服务访问
 
 + 网关 服务：<http://localhost:8080>
+    + swagger 文档：<http://localhost:8080/swagger/index.html>
     + 服务名：`httpService`
 
 + user 服务：<http://localhost:8081>
-    + swagger 文档：<http://localhost:8081/swagger/index.html>
     + 服务名：`rpcUserService`
 
 + order 服务：<http://localhost:8082>
-    + swagger 文档：<http://localhost:8082/swagger/index.html>
     + 服务名：`rpcOrderService`
 
 + 服务发现 服务：<http://localhost:8500>
@@ -92,6 +91,12 @@ docker-compose up -d
         ```sh
         $ apt update
         $ apt install golang-goprotobuf-dev
+
+        or
+
+        curl -L -o /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip && \
+        unzip -d /tmp/protoc /tmp/protoc.zip && \
+        mv /tmp/protoc/bin/protoc $GOPATH/bin
         ```
 
     + protoc-gen-micro 下载
