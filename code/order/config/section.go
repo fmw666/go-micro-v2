@@ -1,5 +1,12 @@
 package config
 
+// server 配置
+type Server struct {
+	Host             string
+	RpcPort          string
+	MicroServiceName string
+}
+
 // db 配置
 type Database struct {
 	Type     string
@@ -9,6 +16,12 @@ type Database struct {
 	Password string
 	Name     string
 	Url      string
+}
+
+// consul 配置
+type Consul struct {
+	Host string
+	Port string
 }
 
 // rabbitmq 配置
@@ -21,5 +34,7 @@ type RabbitMQ struct {
 	Url              string
 }
 
+var ServerSetting = &Server{}
 var DatabaseSetting = &Database{}
+var ConsulSetting = &Consul{}
 var RabbitMQSetting = &RabbitMQ{}
