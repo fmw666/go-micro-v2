@@ -9,9 +9,9 @@ import (
 
 var (
 	LogSavePath = "logs/"
-	LogSaveName = "log"
+	LogSaveName = "log_"
 	LogFileExt  = "log"
-	TimeFormat  = "20060102"
+	TimeFormat  = "2006-01-02"
 )
 
 func getLogFilePath() string {

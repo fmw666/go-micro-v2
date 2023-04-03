@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api-gateway/config"
 	"api-gateway/service"
 	"api-gateway/weblib"
 	"api-gateway/wrappers"
@@ -18,13 +19,13 @@ func init_services(consulReg registry.Registry) map[string]any {
 		micro.Name("userService.client"),
 		micro.WrapClient(wrappers.NewUserWrapper),
 	)
-	userService := service.NewUserService("rpcUserService", userMicroService.Client())
+	userService := service.NewUserService(config.ServiceSetting.UserServiceName, userMicroService.Client())
 
 	orderMicroService := micro.NewService(
 		micro.Name("orderService.client"),
 		micro.WrapClient(wrappers.NewOrderWrapper),
 	)
-	orderService := service.NewOrderService("rpcOrderService", orderMicroService.Client())
+	orderService := service.NewOrderService(config.ServiceSetting.OrderServiceName, orderMicroService.Client())
 
 	return map[string]any{
 		"userService":  userService,
@@ -46,8 +47,7 @@ func init_services(consulReg registry.Registry) map[string]any {
 func main() {
 	// 初始化 consul 注册件
 	consulReg := consul.NewRegistry(
-		// registry.Addrs("172.27.128.1:8500"),
-		registry.Addrs("127.0.0.1:8500"),
+		registry.Addrs(config.ConsulSetting.Host + ":" + config.ConsulSetting.Port),
 	)
 
 	// 初始化服务
@@ -55,8 +55,8 @@ func main() {
 
 	// 创建微服务实例，使用 gin 暴露 http 接口并注册到 consul
 	microService := web.NewService(
-		web.Name("httpService"),
-		web.Address("127.0.0.1:8080"),
+		web.Name(config.ServerSetting.MicroServiceName),
+		web.Address(config.ServerSetting.Host+":"+config.ServerSetting.Port),
 		// 将服务调用实例使用 gin 处理
 		web.Handler(weblib.NewRouter(services)),
 		web.Registry(consulReg),

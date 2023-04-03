@@ -46,7 +46,7 @@ func NewRouter(services map[string]any) *gin.Engine {
 	ginRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	// 中间件
-	ginRouter.Use(middleware.Cors(), middleware.InitMiddleware(services), middleware.ErrorMiddleware())
+	ginRouter.Use(middleware.Logger(), middleware.Cors(), middleware.InitMiddleware(services), middleware.ErrorMiddleware())
 
 	// 路由规则
 	apiv1 := ginRouter.Group("/api/v1")
