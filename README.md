@@ -160,6 +160,11 @@ docker-compose up -d
     ```swift
     .
     ├── api-gateway/                              // 网关 服务
+    │  ├── config/                                // 配置文件包
+    │  │  ├── conf.ini                            // 配置文件
+    │  │  ├── config.go                           // 解析配置文件
+    │  │  └── section.go                          // 配置文件中的 section 定义为结构体
+    │  │
     │  ├── docs/                                  // 由 swag 生成的文档
     │  │  └── ...
     │  │
